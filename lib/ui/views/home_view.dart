@@ -1,0 +1,69 @@
+import 'package:flutter/material.dart';
+import 'package:frontend/ui/shared/shared_styles.dart';
+import 'package:frontend/ui/shared/ui_helpers.dart';
+import 'package:frontend/ui/widgets/busy_indicator.dart';
+import 'package:frontend/viewmodels/home_view_model.dart';
+import 'package:stacked/stacked.dart';
+
+class HomeView extends StatelessWidget {
+  const HomeView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<HomeViewModel>.reactive(
+      viewModelBuilder: () => HomeViewModel(),
+      onModelReady: (model) {
+        model.fetchSomeList();
+      },
+      builder: (context, model, child) => Scaffold(
+        appBar: AppBar(
+          title: Text("HomeView"),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: model.fetchMoreSomeList,
+            )
+          ],
+        ),
+        body: model.busy
+            ? BusyIndicator()
+            : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        'HomeView',
+                        style: titleStyleHugeB,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            return buildList(context, index, model);
+                          },
+                          itemCount: model.someList.length,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+      ),
+    );
+  }
+
+  Widget buildList(BuildContext context, int index, HomeViewModel model) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text('Data: ${model.someList[index]}'),
+        horizontalSpaceSmall,
+        ElevatedButton(
+          onPressed: model.navigateToExample,
+          child: Text('Navigate'),
+        ),
+      ],
+    );
+  }
+}
