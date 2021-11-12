@@ -5,7 +5,6 @@ import 'package:frontend/services/navigation_service.dart';
 import 'base_model.dart';
 
 class HomeViewModel extends BaseModel {
-
   final NavigationService _navigationService = locator<NavigationService>();
 
   List<int> someList = [];
@@ -22,7 +21,8 @@ class HomeViewModel extends BaseModel {
   Future fetchMoreSomeList() async {
     await fetchSomeList();
   }
-  void navigateToExample() async{
-    await _navigationService.navigateTo(ExampleRoute);
+
+  void navigateToExample() async {
+    await _navigationService.navigateTo(ScannerRoute);
   }
 }
