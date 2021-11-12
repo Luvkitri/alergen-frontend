@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:frontend/ui/shared/shared_styles.dart';
 import 'package:frontend/ui/shared/ui_helpers.dart';
 import 'package:frontend/ui/widgets/busy_indicator.dart';
@@ -24,6 +25,11 @@ class HomeView extends StatelessWidget {
               onPressed: model.fetchMoreSomeList,
             )
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: model.navigateToScanner,
+          child: const Icon(Icons.qr_code_scanner),
+          backgroundColor: primaryColor,
         ),
         body: model.busy
             ? BusyIndicator()

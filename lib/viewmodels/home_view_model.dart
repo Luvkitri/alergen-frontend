@@ -23,6 +23,10 @@ class HomeViewModel extends BaseModel {
   }
 
   void navigateToExample() async {
+    await _navigationService.navigateTo(ExampleRoute);
+  }
+
+  void navigateToScanner() async {
     await _navigationService.navigateTo(ScannerRoute);
   }
 }
