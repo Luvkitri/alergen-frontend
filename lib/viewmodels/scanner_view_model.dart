@@ -12,12 +12,11 @@ class ScannerViewModel extends BaseModel {
   }
 
   void forgetCode(String code) {
-    setBusy(true);
     ScannerResults.codes.remove(code);
-    setBusy(false);
+    notifyListeners();
   }
 
-  Future<String?> scanCode() async {
+  Future scanCode() async {
     setBusy(true);
     String code = await FlutterBarcodeScanner.scanBarcode(
         ScannerParameters.scannerColor,
@@ -27,9 +26,6 @@ class ScannerViewModel extends BaseModel {
     setBusy(false);
     if (int.parse(code) != -1) {
       ScannerResults.codes.add(code);
-      return code;
-    } else {
-      return null;
-    }
+    } 
   }
 }
