@@ -3,7 +3,10 @@ import 'package:frontend/ui/shared/app_colors.dart';
 
 class BusyIndicator extends StatefulWidget {
   final Color color;
-  const BusyIndicator({this.color = busyButtonColor});
+  const BusyIndicator({
+    this.color = busyButtonColor,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _BusyIndicatorState createState() => _BusyIndicatorState();

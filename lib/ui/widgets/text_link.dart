@@ -8,7 +8,8 @@ class TextLink extends StatelessWidget {
     this.text,
     this.onPressed, {
     this.textstyle = const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

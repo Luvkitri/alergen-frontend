@@ -9,10 +9,10 @@ class StartUpViewModel extends BaseModel {
   bool isUserLoggedIn = true;
   void handleStartUpLogic() async {
     if (isUserLoggedIn) {
-      await Future.delayed(Duration(seconds: 3));
-      await _navigationService.popAndNavigateTo(HomeViewRoute);
+      await Future.delayed(const Duration(seconds: 3));
+      await _navigationService.popAndNavigateTo(homeViewRoute);
     } else {
-      await _navigationService.popAndNavigateTo(LoginViewRoute);
+      await _navigationService.popAndNavigateTo(loginViewRoute);
     }
   }
 }

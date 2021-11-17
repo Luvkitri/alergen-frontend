@@ -18,10 +18,10 @@ class HomeView extends StatelessWidget {
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
-          title: Text("HomeView"),
+          title: const Text("HomeView"),
           actions: [
             IconButton(
-              icon: Icon(Icons.refresh),
+              icon: const Icon(Icons.refresh),
               onPressed: model.fetchMoreSomeList,
             )
           ],
@@ -32,14 +32,14 @@ class HomeView extends StatelessWidget {
           backgroundColor: primaryColor,
         ),
         body: model.busy
-            ? BusyIndicator()
+            ? const BusyIndicator()
             : Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'HomeView',
                         style: titleStyleHugeB,
                       ),
@@ -67,7 +67,7 @@ class HomeView extends StatelessWidget {
         horizontalSpaceSmall,
         ElevatedButton(
           onPressed: model.navigateToExample,
-          child: Text('Navigate'),
+          child: const Text('Navigate'),
         ),
       ],
     );

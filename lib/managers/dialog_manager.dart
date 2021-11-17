@@ -7,13 +7,13 @@ import '../locator.dart';
 
 class DialogManager extends StatefulWidget {
   final Widget child;
-  DialogManager({Key? key, required this.child}) : super(key: key);
-
+  const DialogManager({Key? key, required this.child}) : super(key: key);
+  @override
   _DialogManagerState createState() => _DialogManagerState();
 }
 
 class _DialogManagerState extends State<DialogManager> {
-  DialogService _dialogService = locator<DialogService>();
+  final DialogService _dialogService = locator<DialogService>();
 
   @override
   void initState() {

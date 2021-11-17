@@ -1,4 +1,4 @@
-const String HomeViewRoute = "HomeView";
-const String LoginViewRoute = "LoginView";
-const String ExampleRoute = "ExampleView";
-const String ScannerRoute = "ScannerView";
+const String homeViewRoute = "HomeView";
+const String loginViewRoute = "LoginView";
+const String exampleRoute = "ExampleView";
+const String scannerRoute = "ScannerView";

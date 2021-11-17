@@ -6,20 +6,20 @@ import 'package:frontend/ui/views/scanner_view.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
-    case HomeViewRoute:
+    case homeViewRoute:
       return _getPageRoute(
         settings.name!,
-        HomeView(),
+        const HomeView(),
       );
-    case ExampleRoute:
+    case exampleRoute:
       return _getPageRoute(
         settings.name!,
-        ExampleView(),
+        const ExampleView(),
       );
-    case ScannerRoute:
+    case scannerRoute:
       return _getPageRoute(
         settings.name!,
-        ScannerView(),
+        const ScannerView(),
       );
     default:
       return MaterialPageRoute(

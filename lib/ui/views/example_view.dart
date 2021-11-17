@@ -11,9 +11,9 @@ class ExampleView extends StatelessWidget {
       viewModelBuilder: () => ExampleViewModel(),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
-          title: Text("Example View"),
+          title: const Text("Example View"),
         ),
-      body: Container(),
+        body: Container(),
       ),
     );
   }

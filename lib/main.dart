@@ -12,17 +12,19 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Fish Stats',
       color: primaryColor,
       builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), //tu pomyśleć czy może zostać ale pewnie nie
+        data: MediaQuery.of(context).copyWith(
+            textScaleFactor: 1.0), //tu pomyśleć czy może zostać ale pewnie nie
         child: Navigator(
           key: locator<DialogService>().dialogNavigationKey,
           onGenerateRoute: (settings) => MaterialPageRoute(
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
               decoration: TextDecoration.none,
             ),
       ),
-      home: StartUpView(),
+      home: const StartUpView(),
       onGenerateRoute: generateRoute,
     );
   }

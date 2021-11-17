@@ -17,29 +17,27 @@ class ScannerView extends StatelessWidget {
         ),
         body: model.busy
             ? const BusyIndicator()
-            : Container(
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    //return buildList(context, index, model);
-                    return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('Data: ${model.getScannedCodes()[index]}'),
-                          horizontalSpaceSmall,
-                          ElevatedButton(
-                            onPressed: () => {},
-                            child: Text('info'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => {
-                              model.forgetCode(model.getScannedCodes()[index])
-                            },
-                            child: Text('remove'),
-                          ),
-                        ]);
-                  },
-                  itemCount: model.getScannedCodes().length,
-                ),
+            : ListView.builder(
+                itemBuilder: (context, index) {
+                  //return buildList(context, index, model);
+                  return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('Data: ${model.getScannedCodes()[index]}'),
+                        horizontalSpaceSmall,
+                        ElevatedButton(
+                          onPressed: () => {},
+                          child: const Text('info'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => {
+                            model.forgetCode(model.getScannedCodes()[index])
+                          },
+                          child: const Text('remove'),
+                        ),
+                      ]);
+                },
+                itemCount: model.getScannedCodes().length,
               ),
         floatingActionButton: FloatingActionButton(
           onPressed: model.scanCode,

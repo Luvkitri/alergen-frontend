@@ -13,11 +13,12 @@ class HomeViewModel extends BaseModel {
 
   Future fetchSomeList() async {
     setBusy(true);
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     for (int i = 0; i < 10; i++) {
       someList.add(i);
     }
     var resp = await _connectionTestService.testConnectionToTheServer();
+    // ignore: avoid_print
     print(resp);
     setBusy(false);
   }
@@ -27,10 +28,10 @@ class HomeViewModel extends BaseModel {
   }
 
   void navigateToExample() async {
-    await _navigationService.navigateTo(ExampleRoute);
+    await _navigationService.navigateTo(exampleRoute);
   }
 
   void navigateToScanner() async {
-    await _navigationService.navigateTo(ScannerRoute);
+    await _navigationService.navigateTo(scannerRoute);
   }
 }

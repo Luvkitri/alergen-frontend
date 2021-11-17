@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/ui/shared/shared_styles.dart';
@@ -24,9 +23,10 @@ class InputField extends StatefulWidget {
   final int maxLength;
   final int maxLines;
 
-  InputField(
+  const InputField(
       {required this.controller,
       required this.placeholder,
+      Key? key,
       this.enterPressed,
       this.enterNewLine,
       this.fieldFocusNode,
@@ -41,7 +41,8 @@ class InputField extends StatefulWidget {
       this.isReadOnly = false,
       this.maxLength = 999999,
       this.smallVersion = false,
-      this.maxLines = 1});
+      this.maxLines = 1})
+      : super(key: key);
 
   @override
   _InputFieldState createState() => _InputFieldState();

@@ -33,7 +33,7 @@ class _SearchBarState extends State<SearchBar> {
     return Container(
       decoration: BoxDecoration(
         color: widget.backgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(15)),
+        borderRadius: const BorderRadius.all(Radius.circular(15)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),

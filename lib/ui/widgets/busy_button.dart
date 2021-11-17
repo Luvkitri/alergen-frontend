@@ -12,12 +12,13 @@ class BusyButton extends StatefulWidget {
   final TextStyle textStyle;
   const BusyButton({
     required this.title,
+    Key? key,
     this.busy = false,
     this.color = busyButtonColor,
     required this.onPressed,
     this.enabled = true,
     this.textStyle = buttonTitleTextStyle,
-  });
+  }) : super(key: key);
 
   @override
   _BusyButtonState createState() => _BusyButtonState();
@@ -47,7 +48,7 @@ class _BusyButtonState extends State<BusyButton> {
                   style: widget.textStyle,
                   textAlign: TextAlign.center,
                 )
-              : CircularProgressIndicator(
+              : const CircularProgressIndicator(
                   strokeWidth: 2,
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
         ),

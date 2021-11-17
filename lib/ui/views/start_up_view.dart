@@ -13,7 +13,7 @@ class StartUpView extends StatelessWidget {
       onModelReady: (model) {
         model.handleStartUpLogic();
       },
-      builder: (context, model, child) => Scaffold(
+      builder: (context, model, child) => const Scaffold(
         body: BusyIndicator(),
       ),
     );
