@@ -23,17 +23,20 @@ class ScannerView extends StatelessWidget {
                   return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('Data: ${model.getScannedCodes()[index]}'),
+                        Text('Code: ${model.getScannedCodes()[index]}'),
                         horizontalSpaceSmall,
                         ElevatedButton(
-                          onPressed: () => {},
-                          child: const Text('info'),
+                          onPressed: () => {
+                            model
+                                .showProductInfo(model.getScannedCodes()[index])
+                          },
+                          child: const Text('Info'),
                         ),
                         ElevatedButton(
                           onPressed: () => {
                             model.forgetCode(model.getScannedCodes()[index])
                           },
-                          child: const Text('remove'),
+                          child: const Text('Remove'),
                         ),
                       ]);
                 },

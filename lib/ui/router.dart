@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/constants/route_names.dart';
 import 'package:frontend/ui/views/example_view.dart';
 import 'package:frontend/ui/views/home_view.dart';
+import 'package:frontend/ui/views/product_view.dart';
 import 'package:frontend/ui/views/scanner_view.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
@@ -20,6 +21,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(
         settings.name!,
         const ScannerView(),
+      );
+    case productRoute:
+      return _getPageRoute(
+        settings.name!,
+        const ProductView(),
       );
     default:
       return MaterialPageRoute(
