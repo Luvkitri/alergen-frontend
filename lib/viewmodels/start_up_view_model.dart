@@ -23,7 +23,7 @@ class StartUpViewModel extends BaseModel {
             description: 'Nie udało się połączyć z serwerem');
       } else {
         await storage.write(key: 'USER_ID', value: userid);
-        await _navigationService.popAndNavigateTo(homeViewRoute);
+        await _navigationService.popAndNavigateTo(userInfoFormViewRoute);
       }
     } else {
       await _navigationService.popAndNavigateTo(homeViewRoute);

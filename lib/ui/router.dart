@@ -3,6 +3,7 @@ import 'package:frontend/constants/route_names.dart';
 import 'package:frontend/ui/views/example_view.dart';
 import 'package:frontend/ui/views/home_view.dart';
 import 'package:frontend/ui/views/scanner_view.dart';
+import 'package:frontend/ui/views/user_info_form_view.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -20,6 +21,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(
         settings.name!,
         const ScannerView(),
+      );
+    case userInfoFormViewRoute:
+      return _getPageRoute(
+        settings.name!,
+        const UserInfoFormView(),
       );
     default:
       return MaterialPageRoute(
