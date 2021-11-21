@@ -7,18 +7,14 @@ class ProductViewModel extends BaseModel {
   final OpenfoodfactsService _openfoodfactsService =
       locator<OpenfoodfactsService>();
 
-  ProductViewModel() {
-    setBusy(true);
-    loadProductInfo();
-  }
-
   Product? p;
   String? errorMsg;
 
   Future<void> loadProductInfo() async {
-    errorMsg = null;
+    setBusy(true);
     try {
       p = await _openfoodfactsService.findProduct();
+      errorMsg = null;
     } on ProductNotFoundException {
       errorMsg = "Product not found";
     } on ProductParseException {

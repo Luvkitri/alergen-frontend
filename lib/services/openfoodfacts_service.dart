@@ -5,7 +5,7 @@ class OpenfoodfactsService {
   static String baseUrl = 'https://world.openfoodfacts.org/api/v2/';
   static String searchUrl = 'https://world.openfoodfacts.org/api/v2/search/';
   static String fieldsQuery =
-      'vfields=code,product_name,allergens,allergens_hierarchy,allergens_tags,ingredients,image_url,image_front_small_url,image_ingredients_url,image_nutrition_url';
+      '?fields=code,product_name,allergens,allergens_hierarchy,allergens_tags,ingredients,image_url,image_thumb_url,categories_hierarchy,url';
 
   static String? currentCode;
   void setCurrentCode(String code) {

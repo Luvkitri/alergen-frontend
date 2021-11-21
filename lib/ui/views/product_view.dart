@@ -16,6 +16,9 @@ class ProductView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ProductViewModel>.reactive(
       viewModelBuilder: () => ProductViewModel(),
+      onModelReady: (model) {
+        model.loadProductInfo();
+      },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: const Text("Product view"),
@@ -28,42 +31,51 @@ class ProductView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Image.network(
-                          model.p!.raw.containsKey("image_url")
-                              ? model.p!.raw["image_url"]
-                              : missingPhotoUrl,
-                          fit: BoxFit.fill,
-                          height: 400),
-                      Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text(model.p!.raw["product_name"],
-                                    style: titleStyleHugeB),
-                                Text(model.p!.raw["allergens"]),
-                                TextButton(
-                                    style: const ButtonStyle(),
-                                    child: const Text(
-                                      'Placeholder button.',
-                                      style: TextStyle(
-                                          color: primaryColor,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    onPressed: () => {}),
-                                TextButton(
-                                    child: const Text(
-                                      'Placeholder button2.',
-                                      style: TextStyle(
-                                          color: secondaryColor,
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                    onPressed: () => {}),
-                              ])),
+                      Image.network(model.p!.imageUrl ?? missingPhotoUrl,
+                          fit: BoxFit.cover, height: 400),
+                      Text(model.p!.name, style: titleStyleHugeB),
+                      model.p!.allergens.isNotEmpty
+                          ? Expanded(
+                              child: ListView.builder(
+                              itemBuilder: (context, index) =>
+                                  buildAllergenList(context, index, model),
+                              itemCount: model.p!.allergens.length,
+                            ))
+                          : Text("No allergens"),
+                      TextButton(
+                          style: const ButtonStyle(),
+                          child: const Text(
+                            'Placeholder button.',
+                            style: TextStyle(
+                                color: primaryColor,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          onPressed: () => {}),
+                      TextButton(
+                          child: const Text(
+                            'Placeholder button2.',
+                            style: TextStyle(
+                                color: secondaryColor,
+                                fontWeight: FontWeight.normal),
+                          ),
+                          onPressed: () => {}),
                     ],
                   ),
       ),
+    );
+  }
+
+  Widget buildAllergenList(
+      BuildContext context, int index, ProductViewModel model) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text('allergen $index: ${model.p!.allergens[index]}'),
+        ElevatedButton(
+          onPressed: () => {},
+          child: const Text('placeholder'),
+        ),
+      ],
     );
   }
 }
