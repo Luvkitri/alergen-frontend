@@ -10,6 +10,7 @@ class ScannerParameters {
 class ScannerResults {
   static List<String> codes = [
     '3017620422003',
-    '8008714002176'
+    '8008714002176',
+    'aaaaaaa3342342'
   ]; // two example codes for quick tests
 }
