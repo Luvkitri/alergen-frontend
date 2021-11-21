@@ -15,8 +15,10 @@ class StartUpViewModel extends BaseModel {
   final storage = const FlutterSecureStorage();
   void handleStartUpLogic() async {
     String? userid = await storage.read(key: 'USER_ID');
+    userid = null;
     if (userid == null) {
-      userid = await _authService.getNewUserID();
+      //userid = await _authService.getNewUserID();
+      userid = "";
       if (userid == null) {
         await _dialogService.showDialog(
             title: 'Wystąpił błąd',
@@ -26,6 +28,7 @@ class StartUpViewModel extends BaseModel {
         await _navigationService.popAndNavigateTo(userInfoFormViewRoute);
       }
     } else {
+      //await _authService.getUser(userid);
       await _navigationService.popAndNavigateTo(homeViewRoute);
     }
   }
