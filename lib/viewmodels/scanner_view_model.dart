@@ -25,28 +25,31 @@ class ScannerViewModel extends BaseModel {
     notifyListeners();
   }
 
-  Future<void> addProductFromCode(String code) async {
+  Future<Product> addUniqueProductFromCode(String code) async {
+    if (!ScannerResults.scannedProducts.any((p) => p.code == code)) {
+      return addProductFromCode(code);
+    } else {
+      return ScannerResults.scannedProducts.firstWhere((p) => p.code == code);
+    }
+  }
+
+  Future<Product> addProductFromCode(String code) async {
     Product p = await _openfoodfactsService.findProduct(code);
     ScannerResults.scannedProducts.insert(0, p);
     notifyListeners();
+    return p;
   }
 
   Future scanCode() async {
     String code;
 
-    // ignore: dead_code
-    if (false) {
-      code = await FlutterBarcodeScanner.scanBarcode(
-          ScannerParameters.scannerColor,
-          ScannerParameters.scannerCancelButtonText,
-          ScannerParameters.scannerShowFlashIcon,
-          ScannerParameters.scannerMode);
-    } else {
-      // static code just for testing without actually scanning
-      code = '8715700420585';
-    }
-    print(code);
-    addProductFromCode(code);
+    code = await FlutterBarcodeScanner.scanBarcode(
+        ScannerParameters.scannerColor,
+        ScannerParameters.scannerCancelButtonText,
+        ScannerParameters.scannerShowFlashIcon,
+        ScannerParameters.scannerMode);
+    Product p = await addUniqueProductFromCode(code);
+    showProductInfo(p);
   }
 
   Future<bool> checkApi() async {
@@ -54,9 +57,6 @@ class ScannerViewModel extends BaseModel {
   }
 
   Future<void> showProductInfo(Product p) async {
-    // TODO: pass argument to opened view (somehow)
-    OpenfoodfactsService.currentViewedProduct = p;
-
     await _navigationService.navigateTo(productRoute, arguments: p);
   }
 }

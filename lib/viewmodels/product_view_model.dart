@@ -6,4 +6,6 @@ import 'package:frontend/locator.dart';
 class ProductViewModel extends BaseModel {
   final OpenfoodfactsService _openfoodfactsService =
       locator<OpenfoodfactsService>();
+
+  late Product product;
 }

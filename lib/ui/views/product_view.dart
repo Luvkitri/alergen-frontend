@@ -10,9 +10,6 @@ import 'package:frontend/ui/shared/ui_helpers.dart';
 class ProductView extends StatelessWidget {
   const ProductView({Key? key}) : super(key: key);
 
-  static const String missingPhotoUrl =
-      'https://upload.wikimedia.org/wikipedia/commons/b/b1/Missing-image-232x150.png';
-
   @override
   Widget build(BuildContext context) {
     final Product product =
@@ -20,7 +17,9 @@ class ProductView extends StatelessWidget {
 
     return ViewModelBuilder<ProductViewModel>.reactive(
       viewModelBuilder: () => ProductViewModel(),
-      onModelReady: (model) {},
+      onModelReady: (model) {
+        model.product = product;
+      },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: const Text("Product view"),
@@ -31,7 +30,7 @@ class ProductView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Image.network(product.imageUrl ?? missingPhotoUrl,
+                  Image.network(product.imageUrl ?? Product.missingPhotoUrl,
                       fit: BoxFit.cover, height: 400),
                   Text(product.name, style: titleStyleHugeB),
                   product.allergens.isNotEmpty
@@ -69,7 +68,13 @@ class ProductView extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('allergens[$index]: ${p.allergens[index]}'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('allergens[$index]: ${p.allergens[index]}'),
+            horizontalSpaceMedium
+          ],
+        ),
         ElevatedButton(
           onPressed: () => {},
           child: const Text('placeholder'),
