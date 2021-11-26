@@ -23,10 +23,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         const ScannerView(),
       );
     case productRoute:
-      return _getPageRoute(
-        settings.name!,
-        const ProductView(),
-      );
+      return _getPageRoute(settings.name!, const ProductView(),
+          arguments: settings.arguments);
     default:
       return MaterialPageRoute(
           builder: (_) => Scaffold(
@@ -36,10 +34,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   }
 }
 
-PageRoute _getPageRoute(String routeName, Widget viewToShow) {
+PageRoute _getPageRoute(String routeName, Widget viewToShow,
+    {dynamic arguments}) {
   return MaterialPageRoute(
-      settings: RouteSettings(
-        name: routeName,
-      ),
+      settings: RouteSettings(name: routeName, arguments: arguments),
       builder: (_) => viewToShow);
 }

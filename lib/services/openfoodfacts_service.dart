@@ -7,10 +7,7 @@ class OpenfoodfactsService {
   static String fieldsQuery =
       '?fields=code,product_name,allergens,allergens_hierarchy,allergens_tags,ingredients,image_url,image_thumb_url,categories_hierarchy,url';
 
-  static String? currentCode;
-  void setCurrentCode(String code) {
-    currentCode = code;
-  }
+  static Product? currentViewedProduct;
 
   Future<bool> testConnectionToTheServer() async {
     try {
@@ -21,19 +18,15 @@ class OpenfoodfactsService {
     }
   }
 
-  Future<Product> findProduct() async {
-    String code = currentCode!;
+  Future<Product> findProduct(String code) async {
     Uri productQueryUrl = Uri.parse(searchUrl + code + fieldsQuery);
-    print(productQueryUrl);
+    print('productQueryUrl : $productQueryUrl');
     http.Response resp;
     try {
       resp = await http.get(productQueryUrl);
     } on Exception {
       throw ProductNotFoundException;
     }
-
-    Product p = Product(resp.body, currentCode!);
-    p.code = code;
-    return p;
+    return Product.fromOpenFoodResponse(resp.body, code);
   }
 }

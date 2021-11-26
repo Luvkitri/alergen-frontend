@@ -16,23 +16,26 @@ class Product {
   late List<String> allergens = [];
   late List<String> categories = [];
 
-  Product(String openfoodfactsJsonResponse, String code) {
+  Product.fromOpenFoodResponse(String openfoodfactsJsonResponse, String code) {
     var resp = jsonDecode(openfoodfactsJsonResponse);
     if (!resp.containsKey("products")) {
       throw ProductParseException();
     }
-    // shit but works for now
-    bool found = false;
-    for (var i = 0; i < resp["products"].length; i++) {
-      if (resp["products"][i]["code"] == code) {
-        raw = resp["products"][i];
-        found = true;
-        break;
-      }
+    List<dynamic> whereProductCodeMatches = List.castFrom(resp["products"])
+        .where((e) => e["code"] == code)
+        .toList();
+
+    if (whereProductCodeMatches.isEmpty) {
+      throw ProductNotFoundException();
     }
-    if (!found) {
-      throw ProductParseException();
+
+    // multiple products found, guess shouldnt happen tho
+    if (whereProductCodeMatches.length > 1) {
+      throw ProductNotFoundException();
     }
+
+    raw = whereProductCodeMatches[0];
+
     //
     name = raw.containsKey("product_name") ? raw["product_name"] : name;
     imageUrl = raw.containsKey("image_url") ? raw["image_url"] : imageUrl;
@@ -48,6 +51,10 @@ class Product {
     url = raw.containsKey("url") ? raw["url"] : url;
 
     allergens = allergens.map((a) => a.substring(3)).toList();
-    print(this);
+
+    // print(this);
   }
+
+  Product(this.code, this.name, this.imageUrl, this.imageThumbUrl, this.url,
+      this.allergens, this.categories);
 }

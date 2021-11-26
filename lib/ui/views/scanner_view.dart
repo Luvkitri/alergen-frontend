@@ -23,24 +23,25 @@ class ScannerView extends StatelessWidget {
                   return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('Code: ${model.getScannedCodes()[index]}'),
+                        Text('Code: ${model.getScannedProducts()[index].code}'),
                         horizontalSpaceSmall,
                         ElevatedButton(
                           onPressed: () => {
-                            model
-                                .showProductInfo(model.getScannedCodes()[index])
+                            model.showProductInfo(
+                                model.getScannedProducts()[index])
                           },
                           child: const Text('Info'),
                         ),
                         ElevatedButton(
                           onPressed: () => {
-                            model.forgetCode(model.getScannedCodes()[index])
+                            model.removeScannedProduct(
+                                model.getScannedProducts()[index])
                           },
-                          child: const Text('Remove'),
+                          child: const Icon(Icons.remove),
                         ),
                       ]);
                 },
-                itemCount: model.getScannedCodes().length,
+                itemCount: model.getScannedProducts().length,
               ),
         floatingActionButton: FloatingActionButton(
           onPressed: model.scanCode,
