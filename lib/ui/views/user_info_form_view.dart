@@ -11,6 +11,9 @@ class UserInfoFormView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<UserInfoFromViewModel>.reactive(
       viewModelBuilder: () => UserInfoFromViewModel(),
+      onModelReady: (model) {
+        model.init();
+      },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: const Text("Dane użytkownika"),
@@ -34,7 +37,8 @@ class UserInfoFormView extends StatelessWidget {
               smallSpacedDivider,
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: ElevatedButton(onPressed: model.save, child: const Text('Zapisz')),
+                child: ElevatedButton(
+                    onPressed: model.save, child: const Text('Zapisz')),
               )
             ],
           ),
@@ -70,7 +74,10 @@ class UserInfoFormView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: const TextStyle(fontSize: 18)),
-          InputField(controller: controller, placeholder: title)
+          InputField(
+            controller: controller,
+            placeholder: title,
+          )
         ],
       ),
     );

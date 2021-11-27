@@ -13,6 +13,7 @@ class AuthService {
     var resp = await http.get(url);
     if (resp.statusCode == 200) {
       String userid = jsonDecode(resp.body)['userid'];
+      user = User(userid);
       return userid;
     } else {
       return null;
@@ -22,7 +23,9 @@ class AuthService {
   Future getUser(String userid) async {
     var resp = await http.get(Uri.parse(urlS + '/users/get/' + userid));
     if (resp.statusCode == 200) {
-      String userid = jsonDecode(resp.body)['userid'];
+      var userResp = jsonDecode(resp.body);
+      String userid = userResp['userid'];
+      user = User.fromData(userResp);
       return userid;
     } else {
       return null;

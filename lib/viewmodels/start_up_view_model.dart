@@ -26,9 +26,11 @@ class StartUpViewModel extends BaseModel {
       } else {
         await storage.write(key: 'USER_ID', value: userid);
         await _navigationService.popAndNavigateTo(userInfoFormViewRoute);
+        await _navigationService.popAndNavigateTo(homeViewRoute);
       }
     } else {
       //await _authService.getUser(userid);
+      await _authService.getUser(userid);
       await _navigationService.popAndNavigateTo(homeViewRoute);
     }
   }
