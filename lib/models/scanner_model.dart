@@ -1,5 +1,7 @@
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
+import 'product_model.dart';
+
 class ScannerParameters {
   static const scannerColor = "#ff0000";
   static const scannerCancelButtonText = "Cancel";
@@ -8,5 +10,5 @@ class ScannerParameters {
 }
 
 class ScannerResults {
-  static List<String> codes = [];
+  static List<Product> scannedProducts = [];
 }

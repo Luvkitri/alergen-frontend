@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/product_model.dart';
 import 'package:frontend/ui/shared/ui_helpers.dart';
 import 'package:frontend/ui/widgets/busy_indicator.dart';
 import 'package:frontend/viewmodels/scanner_view_model.dart';
 import 'package:stacked/stacked.dart';
+import 'package:frontend/ui/shared/app_colors.dart';
 
 class ScannerView extends StatelessWidget {
   const ScannerView({Key? key}) : super(key: key);
@@ -11,33 +13,23 @@ class ScannerView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ScannerViewModel>.reactive(
       viewModelBuilder: () => ScannerViewModel(),
+      onModelReady: (model) => {},
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
-          title: const Text("Scanner View"),
+          title: const Text("Product scanner"),
+          actions: [
+            IconButton(
+                onPressed: model.addTestProduct,
+                icon: const Icon(Icons.add_box))
+          ],
         ),
         body: model.busy
             ? const BusyIndicator()
             : ListView.builder(
-                itemBuilder: (context, index) {
-                  //return buildList(context, index, model);
-                  return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text('Data: ${model.getScannedCodes()[index]}'),
-                        horizontalSpaceSmall,
-                        ElevatedButton(
-                          onPressed: () => {},
-                          child: const Text('info'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => {
-                            model.forgetCode(model.getScannedCodes()[index])
-                          },
-                          child: const Text('remove'),
-                        ),
-                      ]);
-                },
-                itemCount: model.getScannedCodes().length,
+                itemExtent: 100.0,
+                itemBuilder: (context, index) =>
+                    buildProductList(context, index, model),
+                itemCount: model.getScannedProducts().length,
               ),
         floatingActionButton: FloatingActionButton(
           onPressed: model.scanCode,
@@ -46,5 +38,41 @@ class ScannerView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget buildProductList(
+      BuildContext context, int index, ScannerViewModel model) {
+    Product p = model.getScannedProducts()[index];
+    return Padding(
+        padding: const EdgeInsets.all(8),
+        child: InkWell(
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AspectRatio(
+                    aspectRatio: 1.0,
+                    child: Image.network(p.imageUrl ?? Product.missingPhotoUrl,
+                        fit: BoxFit.cover)),
+                Expanded(
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text(
+                            '${model.getScannedProducts()[index].name} (${model.getScannedProducts()[index].allergens.length.toString()})'),
+                      )),
+                ),
+                TextButton(
+                  onPressed: () => {
+                    model
+                        .removeScannedProduct(model.getScannedProducts()[index])
+                  },
+                  child: const Icon(Icons.delete, color: secondaryColor),
+                ),
+              ]),
+          onTap: () =>
+              {model.showProductInfo(model.getScannedProducts()[index])},
+        ));
   }
 }
