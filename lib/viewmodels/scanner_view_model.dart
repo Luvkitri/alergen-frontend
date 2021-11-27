@@ -6,11 +6,25 @@ import 'package:frontend/viewmodels/base_model.dart';
 import 'package:frontend/models/scanner_model.dart';
 import 'package:frontend/services/openfoodfacts_service.dart';
 import 'package:frontend/locator.dart';
+import 'dart:math';
 
 class ScannerViewModel extends BaseModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final OpenfoodfactsService _openfoodfactsService =
       locator<OpenfoodfactsService>();
+
+  // example codes for quick tests
+  static List<String> sampleCodes = [
+    '3017620422003', // nutella
+    '8008714002176', // bbq chips
+    '5900311003705', // ??
+    '20026752', // piri piri
+    '8715700420585', // heinz ketchup
+    '5907069000017', // sugar
+    '8711000525722', // jacobs coffee
+    'aaaaaaa3342342', // wrong code
+    '8711000525723' // mising code
+  ];
 
   Product getLastScannedProduct() {
     return ScannerResults.scannedProducts.last;
@@ -22,6 +36,7 @@ class ScannerViewModel extends BaseModel {
 
   void removeScannedProduct(Product p) {
     ScannerResults.scannedProducts.remove(p);
+    sampleCodes.add(p.code);
     notifyListeners();
   }
 
@@ -40,14 +55,26 @@ class ScannerViewModel extends BaseModel {
     return p;
   }
 
-  Future scanCode() async {
-    String code;
+  Future addTestProduct() async {
+    if (sampleCodes.isNotEmpty) {
+      setBusy(true);
+      String code = sampleCodes[Random().nextInt(sampleCodes.length)];
+      Product p = await addUniqueProductFromCode(code);
+      for (int i = 0; i < 30; i++) {
+        p.allergens.add('random allergen just to fill list $i');
+      }
+      sampleCodes.remove(code);
+      setBusy(false);
+    }
+  }
 
-    code = await FlutterBarcodeScanner.scanBarcode(
+  Future scanCode() async {
+    String code = await FlutterBarcodeScanner.scanBarcode(
         ScannerParameters.scannerColor,
         ScannerParameters.scannerCancelButtonText,
         ScannerParameters.scannerShowFlashIcon,
         ScannerParameters.scannerMode);
+
     Product p = await addUniqueProductFromCode(code);
     showProductInfo(p);
   }

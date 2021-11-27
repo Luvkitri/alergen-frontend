@@ -22,7 +22,7 @@ class ProductView extends StatelessWidget {
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
-          title: const Text("Product view"),
+          title: const Text("Product"),
         ),
         body: model.busy
             ? const BusyIndicator()
@@ -31,16 +31,25 @@ class ProductView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Image.network(product.imageUrl ?? Product.missingPhotoUrl,
-                      fit: BoxFit.cover, height: 400),
-                  Text(product.name, style: titleStyleHugeB),
+                      fit: BoxFit.cover, height: 150),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(product.name, style: titleStyleHugeB),
+                            const Text('Allergens:')
+                          ])),
                   product.allergens.isNotEmpty
                       ? Expanded(
                           child: ListView.builder(
+                          itemExtent: 60.0,
                           itemBuilder: (context, index) =>
                               buildAllergenList(context, index, model, product),
                           itemCount: product.allergens.length,
                         ))
-                      : const Text("No allergens"),
+                      : const Text("Haven't found any allergens"),
                   TextButton(
                       style: const ButtonStyle(),
                       child: const Text(
@@ -56,7 +65,7 @@ class ProductView extends StatelessWidget {
                             color: secondaryColor,
                             fontWeight: FontWeight.normal),
                       ),
-                      onPressed: () => {}),
+                      onPressed: () => {})
                 ],
               ),
       ),
@@ -65,21 +74,20 @@ class ProductView extends StatelessWidget {
 
   Widget buildAllergenList(
       BuildContext context, int index, ProductViewModel model, Product p) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('allergens[$index]: ${p.allergens[index]}'),
-            horizontalSpaceMedium
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Text(p.allergens[index]), horizontalSpaceMedium],
+            ),
+            ElevatedButton(
+              onPressed: () => {},
+              child: const Text('placeholder'),
+            ),
           ],
-        ),
-        ElevatedButton(
-          onPressed: () => {},
-          child: const Text('placeholder'),
-        ),
-      ],
-    );
+        ));
   }
 }

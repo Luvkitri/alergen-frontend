@@ -20,7 +20,6 @@ class OpenfoodfactsService {
 
   Future<Product> findProduct(String code) async {
     Uri productQueryUrl = Uri.parse(searchUrl + code + fieldsQuery);
-    print('productQueryUrl : $productQueryUrl');
     http.Response resp;
     try {
       resp = await http.get(productQueryUrl);
