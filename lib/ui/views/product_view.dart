@@ -79,10 +79,7 @@ class ProductView extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text(p.allergens[index]), horizontalSpaceMedium],
-            ),
+            Expanded(child: Text(p.allergens[index])),
             ElevatedButton(
               onPressed: () => {},
               child: const Text('placeholder'),
