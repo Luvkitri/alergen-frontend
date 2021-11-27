@@ -61,7 +61,8 @@ class ScannerViewModel extends BaseModel {
       String code = sampleCodes[Random().nextInt(sampleCodes.length)];
       Product p = await addUniqueProductFromCode(code);
       for (int i = 0; i < 30; i++) {
-        p.allergens.add('random allergen just to fill list $i');
+        p.allergens.add(
+            'random allergen just to fill list and overflow text field $i');
       }
       sampleCodes.remove(code);
       setBusy(false);
@@ -69,6 +70,7 @@ class ScannerViewModel extends BaseModel {
   }
 
   Future scanCode() async {
+    setBusy(true);
     String code = await FlutterBarcodeScanner.scanBarcode(
         ScannerParameters.scannerColor,
         ScannerParameters.scannerCancelButtonText,
@@ -76,6 +78,7 @@ class ScannerViewModel extends BaseModel {
         ScannerParameters.scannerMode);
 
     Product p = await addUniqueProductFromCode(code);
+    setBusy(false);
     showProductInfo(p);
   }
 

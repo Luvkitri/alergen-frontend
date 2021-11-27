@@ -43,30 +43,36 @@ class ScannerView extends StatelessWidget {
   Widget buildProductList(
       BuildContext context, int index, ScannerViewModel model) {
     Product p = model.getScannedProducts()[index];
-    return InkWell(
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Image.network(p.imageUrl ?? Product.missingPhotoUrl,
-                fit: BoxFit.cover, width: 100),
-            Expanded(
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Text(
-                        '${model.getScannedProducts()[index].name} (${model.getScannedProducts()[index].allergens.length.toString()})'),
-                  )),
-            ),
-            TextButton(
-              onPressed: () => {
-                model.removeScannedProduct(model.getScannedProducts()[index])
-              },
-              child: const Icon(Icons.delete, color: secondaryColor),
-            ),
-          ]),
-      onTap: () => {model.showProductInfo(model.getScannedProducts()[index])},
-    );
+    return Padding(
+        padding: const EdgeInsets.all(8),
+        child: InkWell(
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AspectRatio(
+                    aspectRatio: 1.0,
+                    child: Image.network(p.imageUrl ?? Product.missingPhotoUrl,
+                        fit: BoxFit.cover)),
+                Expanded(
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text(
+                            '${model.getScannedProducts()[index].name} (${model.getScannedProducts()[index].allergens.length.toString()})'),
+                      )),
+                ),
+                TextButton(
+                  onPressed: () => {
+                    model
+                        .removeScannedProduct(model.getScannedProducts()[index])
+                  },
+                  child: const Icon(Icons.delete, color: secondaryColor),
+                ),
+              ]),
+          onTap: () =>
+              {model.showProductInfo(model.getScannedProducts()[index])},
+        ));
   }
 }
