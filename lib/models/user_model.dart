@@ -11,9 +11,19 @@ class User {
 
   User.fromData(Map<String, dynamic> json)
       : id = json['id'],
-        birthday = json['birthday'],
+        birthday = json['birthday'] != null ? DateTime.parse(json['birthday']) : null,
         name = json['name'],
         email = json['email'],
         sex = json['sex'],
-        phoneNumber = json['phoneNumber'];
+        phoneNumber = json['phone_number'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'birthday': birthday?.toString(),
+      'name': name,
+      'email': email,
+      'sex': sex,
+      'phone_number': phoneNumber,
+    };
+  }
 }

@@ -16,20 +16,27 @@ class UserInfoFormView extends StatelessWidget {
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
-          title: const Text("Dane użytkownika"),
+          title: const Text("User info"),
           actions: [
-            IconButton(onPressed: model.save, icon: const Icon(Icons.done))
+            IconButton(
+              onPressed: model.save,
+              icon: const Icon(Icons.done),
+            ),
+            IconButton(
+              onPressed: model.deleteUser,
+              icon: const Icon(Icons.delete),
+            ),
           ],
         ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              userInfoFormField('Imię', model.nameController),
+              userInfoFormField('Name', model.nameController),
               smallSpacedDivider,
               userInfoFormField('Email', model.emailController),
               smallSpacedDivider,
-              userInfoFormField('Numer telefonu', model.phoneNumberController),
+              userInfoFormField('Phone number', model.phoneNumberController),
               smallSpacedDivider,
               userInfoSexSelector(model),
               smallSpacedDivider,
@@ -38,7 +45,7 @@ class UserInfoFormView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: ElevatedButton(
-                    onPressed: model.save, child: const Text('Zapisz')),
+                    onPressed: model.save, child: const Text('Save')),
               )
             ],
           ),
@@ -54,14 +61,14 @@ class UserInfoFormView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const Text('Data urodzenia', style: TextStyle(fontSize: 18)),
+          const Text('Birthday', style: TextStyle(fontSize: 18)),
           ElevatedButton(
               onPressed: () {
                 model.showBirthdayPicker(context);
               },
               child: Text(model.selectedDate != null
                   ? model.selectedDate.toString().substring(0, 11)
-                  : 'Klinij by wybrać'))
+                  : 'Click to pick'))
         ],
       ),
     );
@@ -90,9 +97,9 @@ class UserInfoFormView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Płeć', style: TextStyle(fontSize: 18)),
+          const Text('Sex', style: TextStyle(fontSize: 18)),
           ListTile(
-            title: const Text("Mężczyzna"),
+            title: const Text("Men"),
             leading: Radio(
               value: 'M',
               groupValue: model.groupValue,
@@ -101,7 +108,7 @@ class UserInfoFormView extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text("Kobieta"),
+            title: const Text("Female"),
             leading: Radio(
               value: 'F',
               groupValue: model.groupValue,
@@ -110,7 +117,7 @@ class UserInfoFormView extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text("Inne / Wole nie mówić"),
+            title: const Text("Other / Prefer not to say"),
             leading: Radio(
               value: 'X',
               groupValue: model.groupValue,

@@ -13,24 +13,28 @@ class StartUpViewModel extends BaseModel {
   final DialogService _dialogService = locator<DialogService>();
   bool isUserLoggedIn = true;
   final storage = const FlutterSecureStorage();
+
   void handleStartUpLogic() async {
+    setBusy(true);
     String? userid = await storage.read(key: 'USER_ID');
-    userid = null;
-    if (userid == null) {
-      //userid = await _authService.getNewUserID();
-      userid = "";
-      if (userid == null) {
-        await _dialogService.showDialog(
-            title: 'Wystąpił błąd',
-            description: 'Nie udało się połączyć z serwerem');
-      } else {
-        await storage.write(key: 'USER_ID', value: userid);
-        await _navigationService.popAndNavigateTo(userInfoFormViewRoute);
-        await _navigationService.popAndNavigateTo(homeViewRoute);
-      }
-    } else {
-      //await _authService.getUser(userid);
+    //userid = null;
+    if (userid != null) {
       await _authService.getUser(userid);
+      await _navigationService.popAndNavigateTo(homeViewRoute);
+    } else {
+      setBusy(false);
+    }
+  }
+
+  Future newUser() async {
+    String? userid = await _authService.getNewUserID();
+    if (userid == null) {
+      await _dialogService.showDialog(
+          title: 'Error occured',
+          description: 'Could not connect to the server');
+    } else {
+      await storage.write(key: 'USER_ID', value: userid);
+      await _navigationService.popAndNavigateTo(userInfoFormViewRoute);
       await _navigationService.popAndNavigateTo(homeViewRoute);
     }
   }
