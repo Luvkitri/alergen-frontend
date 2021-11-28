@@ -4,5 +4,5 @@ const String exampleRoute = "ExampleView";
 const String scannerRoute = "ScannerView";
 const String userInfoFormViewRoute = "UserInfoFormViewRoute";
 const String startUpViewRoute = "startUpViewRoute";
-
+const String productRoute = "ProductView";
 

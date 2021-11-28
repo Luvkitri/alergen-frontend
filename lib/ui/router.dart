@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/constants/route_names.dart';
 import 'package:frontend/ui/views/example_view.dart';
 import 'package:frontend/ui/views/home_view.dart';
+import 'package:frontend/ui/views/product_view.dart';
 import 'package:frontend/ui/views/scanner_view.dart';
 import 'package:frontend/ui/views/start_up_view.dart';
 import 'package:frontend/ui/views/user_info_form_view.dart';
@@ -33,6 +34,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         settings.name!,
         const StartUpView(),
       );
+    case productRoute:
+      return _getPageRoute(settings.name!, const ProductView(),
+          arguments: settings.arguments);
     default:
       return MaterialPageRoute(
           builder: (_) => Scaffold(
@@ -42,10 +46,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   }
 }
 
-PageRoute _getPageRoute(String routeName, Widget viewToShow) {
+PageRoute _getPageRoute(String routeName, Widget viewToShow,
+    {dynamic arguments}) {
   return MaterialPageRoute(
-      settings: RouteSettings(
-        name: routeName,
-      ),
+      settings: RouteSettings(name: routeName, arguments: arguments),
       builder: (_) => viewToShow);
 }
