@@ -5,7 +5,6 @@ import 'package:stacked/stacked.dart';
 import 'package:frontend/ui/widgets/busy_indicator.dart';
 import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:frontend/ui/shared/shared_styles.dart';
-import 'package:frontend/ui/shared/ui_helpers.dart';
 
 class ProductView extends StatelessWidget {
   const ProductView({Key? key}) : super(key: key);
