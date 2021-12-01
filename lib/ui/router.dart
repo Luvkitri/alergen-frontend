@@ -4,6 +4,8 @@ import 'package:frontend/ui/views/example_view.dart';
 import 'package:frontend/ui/views/home_view.dart';
 import 'package:frontend/ui/views/product_view.dart';
 import 'package:frontend/ui/views/scanner_view.dart';
+import 'package:frontend/ui/views/start_up_view.dart';
+import 'package:frontend/ui/views/user_info_form_view.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -21,6 +23,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(
         settings.name!,
         const ScannerView(),
+      );
+    case userInfoFormViewRoute:
+      return _getPageRoute(
+        settings.name!,
+        const UserInfoFormView(),
+      );
+    case startUpViewRoute:
+      return _getPageRoute(
+        settings.name!,
+        const StartUpView(),
       );
     case productRoute:
       return _getPageRoute(settings.name!, const ProductView(),
