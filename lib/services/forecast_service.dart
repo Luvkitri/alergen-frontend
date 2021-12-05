@@ -18,6 +18,7 @@ class ForecastService {
       DateTime date, PositionItem location) async {
     // TODO: actual api call, when ready
     // for now, mock
+    print("getForecastForDate");
     http.Response response = await api.post(Uri.http(baseUrl, '/forecast'),
         body: jsonEncode({
           'date': date.toIso8601String(),

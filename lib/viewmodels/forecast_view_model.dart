@@ -14,17 +14,23 @@ class ForecastViewModel extends BaseModel {
   ForecastItem? todaysForecast;
 
   Future<String?> getLocation() async {
+    setBusy(true);
+    await _getLocation();
+    setBusy(false);
+  }
+
+  Future<String?> _getLocation() async {
     await _geoService.getCurrentPosition();
     position = _geoService.getLastPosition();
-    notifyListeners();
   }
 
   Future<void> getForecast() async {
+    setBusy(true);
     if (position == null) {
-      await getLocation();
+      await _getLocation();
     }
     todaysForecast =
         await _forecastService.getForecastForDate(DateTime.now(), position!);
-    notifyListeners();
+    setBusy(false);
   }
 }
