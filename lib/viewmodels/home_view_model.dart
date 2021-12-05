@@ -27,7 +27,12 @@ class HomeViewModel extends BaseModel {
   void navigateToScanner() async {
     await _navigationService.navigateTo(scannerRoute);
   }
-  void navigateToUserInfoForm() async{
+
+  void navigateToUserInfoForm() async {
     await _navigationService.navigateTo(userInfoFormViewRoute);
+  }
+
+  void navigateToForecast() async {
+    await _navigationService.navigateTo(forecastRoute);
   }
 }
