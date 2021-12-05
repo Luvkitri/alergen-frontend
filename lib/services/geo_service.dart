@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/material.dart';
 import 'package:frontend/models/geo_model.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -15,8 +13,6 @@ class GeoService {
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
   final List<PositionItem> _positionItems = <PositionItem>[];
 
-  StreamSubscription<Position>? _positionStreamSubscription;
-  StreamSubscription<ServiceStatus>? _serviceStatusStreamSubscription;
   bool positionStreamStarted = false;
 
   PositionItem getLastPosition() {
@@ -36,10 +32,12 @@ class GeoService {
       if (coords.length == 2) {
         lat = coords[0];
         long = coords[1];
+        _positionItems.add(PositionItem(type, displayValue, lat, long));
       }
-    } catch (e) {}
-
-    _positionItems.add(PositionItem(type, displayValue, lat, long));
+    } catch (e) {
+      //ignore, string didnt contain valid coordinates
+      //must've been a status message
+    }
   }
 
   Future<String?> getCurrentPosition() async {

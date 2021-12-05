@@ -9,7 +9,7 @@ class ForecastView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ForecastViewModel>.reactive(
       viewModelBuilder: () => ForecastViewModel(),
-      onModelReady: (viewmodel) => {viewmodel.getLocation()},
+      onModelReady: (viewmodel) => {viewmodel.getForecast()},
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: const Text("Forecast View"),
@@ -22,8 +22,9 @@ class ForecastView extends StatelessWidget {
               children: [
                 Text(
                     "(${model.position?.latitude} ${model.position?.longitude})"),
-                Text("jaki region"),
-                Text("poziom pylenia dzisiaj"),
+                Text("jaki region? ${model.todaysForecast?.region}"),
+                Text(
+                    "poziom pylenia dzisiaj? ${model.todaysForecast?.date} ${model.todaysForecast?.allergenTypeStrength}"),
                 Text("next 7 dni - wiersz"),
                 Text("next miesiac - lista"),
                 TextButton(
