@@ -1,21 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/models/geo_model.dart';
 import 'package:geolocator/geolocator.dart';
-
-enum PositionItemType {
-  log,
-  position,
-}
-
-class PositionItem {
-  PositionItem(this.type, this.displayValue, this.latitude, this.longitude);
-
-  final PositionItemType type;
-  final String displayValue;
-  final double? latitude;
-  final double? longitude;
-}
 
 class GeoService {
   static const String _kLocationServicesDisabledMessage =

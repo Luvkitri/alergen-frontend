@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:frontend/locator.dart';
+import 'package:frontend/models/geo_model.dart';
 import 'package:frontend/services/forecast_service.dart';
 import 'package:frontend/services/geo_service.dart';
 import 'package:frontend/viewmodels/base_model.dart';
