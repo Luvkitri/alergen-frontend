@@ -10,10 +10,9 @@ GetIt locator = GetIt.instance;
 void setupLocator() {
   locator.registerLazySingleton<NavigationService>(() => NavigationService());
   locator.registerLazySingleton<DialogService>(() => DialogService());
-  locator.registerLazySingleton<ConnectionTestService>(() => ConnectionTestService());
-  locator.registerLazySingleton<AuthService>(() => AuthService());
   locator.registerLazySingleton<ConnectionTestService>(
       () => ConnectionTestService());
+  locator.registerLazySingleton<AuthService>(() => AuthService());
   locator.registerLazySingleton<OpenfoodfactsService>(
       () => OpenfoodfactsService());
 }
