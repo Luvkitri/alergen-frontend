@@ -30,4 +30,7 @@ class HomeViewModel extends BaseModel {
   void navigateToUserInfoForm() async{
     await _navigationService.navigateTo(userInfoFormViewRoute);
   }
+  void navigateToAllergies() async{
+    await _navigationService.navigateTo(allergiesViewRoute);
+  }
 }
