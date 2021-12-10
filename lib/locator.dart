@@ -1,3 +1,4 @@
+import 'package:frontend/services/allergies_service.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/connetion_test_service.dart';
 import 'package:get_it/get_it.dart';
@@ -15,4 +16,5 @@ void setupLocator() {
   locator.registerLazySingleton<AuthService>(() => AuthService());
   locator.registerLazySingleton<OpenfoodfactsService>(
       () => OpenfoodfactsService());
+  locator.registerLazySingleton<AllergiesService>(() => AllergiesService());
 }

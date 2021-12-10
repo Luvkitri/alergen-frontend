@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/constants/route_names.dart';
+import 'package:frontend/ui/views/add_allergies_view.dart';
+import 'package:frontend/ui/views/allergies_view.dart';
 import 'package:frontend/ui/views/example_view.dart';
 import 'package:frontend/ui/views/home_view.dart';
 import 'package:frontend/ui/views/product_view.dart';
@@ -33,6 +35,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(
         settings.name!,
         const StartUpView(),
+      );
+    case allergiesViewRoute:
+      return _getPageRoute(
+        settings.name!,
+        const AllergiesView(),
+      );
+    case addAllergiesViewRoute:
+      return _getPageRoute(
+        settings.name!,
+        const AddAllergiesView(),
       );
     case productRoute:
       return _getPageRoute(settings.name!, const ProductView(),
