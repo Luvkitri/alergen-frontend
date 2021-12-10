@@ -35,4 +35,8 @@ class HomeViewModel extends BaseModel {
   void navigateToForecast() async {
     await _navigationService.navigateTo(forecastRoute);
   }
+
+  void navigateToAllergies() async {
+    await _navigationService.navigateTo(allergiesViewRoute);
+  }
 }

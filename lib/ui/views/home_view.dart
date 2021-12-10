@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui/shared/app_colors.dart';
+// import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:frontend/ui/shared/shared_styles.dart';
 import 'package:frontend/ui/shared/ui_helpers.dart';
 import 'package:frontend/ui/widgets/busy_indicator.dart';
@@ -28,37 +28,25 @@ class HomeView extends StatelessWidget {
               icon: const Icon(Icons.account_box),
               onPressed: model.navigateToUserInfoForm,
             ),
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: model.fetchMoreSomeList,
-            )
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: model.navigateToScanner,
-          child: const Icon(Icons.qr_code_scanner),
-          backgroundColor: primaryColor,
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: model.navigateToScanner,
+        //   child: const Icon(Icons.qr_code_scanner),
+        //   backgroundColor: primaryColor,
+        // ),
         body: model.busy
             ? const BusyIndicator()
             : Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const Text(
-                        'HomeView',
-                        style: titleStyleHugeB,
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return buildList(context, index, model);
-                          },
-                          itemCount: model.someList.length,
-                        ),
-                      )
+                      menuButton(model.navigateToAllergies, 'Allergies'),
+                      verticalSpaceSmall,
+                      menuButton(model.navigateToUserInfoForm, 'User info'),
+                      verticalSpaceSmall,
+                      menuButton(model.navigateToScanner, 'Bar code scanner'),
                     ],
                   ),
                 ),
@@ -67,15 +55,20 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget buildList(BuildContext context, int index, HomeViewModel model) {
+  Widget menuButton(Function() onpressed, String title) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Text('Data: ${model.someList[index]}'),
-        horizontalSpaceSmall,
-        ElevatedButton(
-          onPressed: model.navigateToExample,
-          child: const Text('Navigate'),
+        Expanded(
+          child: SizedBox(
+            height: 100,
+            child: ElevatedButton(
+              onPressed: onpressed,
+              child: Text(
+                title,
+                style: largeButtonTitleTextStyle,
+              ),
+            ),
+          ),
         ),
       ],
     );

@@ -41,3 +41,6 @@ const EdgeInsets largeFieldPadding =
 // Text Variables
 const TextStyle buttonTitleTextStyle =
     TextStyle(fontWeight: FontWeight.w700, color: Colors.white);
+
+  const TextStyle largeButtonTitleTextStyle =
+    TextStyle(fontSize: 32 ,fontWeight: FontWeight.w700, color: Colors.white);
