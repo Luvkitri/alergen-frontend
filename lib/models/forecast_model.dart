@@ -15,7 +15,7 @@ class ForecastItem {
     final date = DateTime.parse(data['date']);
     final region = data['region'] as int;
     final Map<String, int> allergenTypeStrength =
-        Map.castFrom(data['forecast']);
+        Map.castFrom(data['allergens']);
     return ForecastItem(
         date: date, region: region, allergenTypeStrength: allergenTypeStrength);
   }

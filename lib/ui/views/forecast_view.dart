@@ -31,8 +31,10 @@ class ForecastView extends StatelessWidget {
                     Text("today is: ${model.todaysForecast?.date}"),
                     Text(
                         "allergens in air today: ${model.todaysForecast?.allergenTypeStrength}"),
-                    const Text("next 7 days - row ..."),
-                    const Text("next month - list ..."),
+                    Text(
+                        "next 7 days - row ...${model.weekForecast?.map((e) => e.date)}"),
+                    Text(
+                        "next month - list ...${model.monthForecast?.map((e) => e.date)}"),
                     smallSpacedDivider,
                     TextButton(
                         onPressed: () => {model.getForecast()},

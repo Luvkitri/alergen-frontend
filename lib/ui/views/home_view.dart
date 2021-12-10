@@ -47,6 +47,8 @@ class HomeView extends StatelessWidget {
                       menuButton(model.navigateToUserInfoForm, 'User info'),
                       verticalSpaceSmall,
                       menuButton(model.navigateToScanner, 'Bar code scanner'),
+                      verticalSpaceSmall,
+                      menuButton(model.navigateToForecast, 'Forecast'),
                     ],
                   ),
                 ),

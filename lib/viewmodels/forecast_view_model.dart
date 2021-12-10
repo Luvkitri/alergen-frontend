@@ -13,24 +13,52 @@ class ForecastViewModel extends BaseModel {
 
   ForecastItem? todaysForecast;
 
+  List<ForecastItem>? weekForecast;
+
+  List<ForecastItem>? monthForecast;
+
   Future<String?> getLocation() async {
     setBusy(true);
-    await _getLocation();
+    await _updatePosition();
     setBusy(false);
-  }
-
-  Future<String?> _getLocation() async {
-    await _geoService.getCurrentPosition();
-    position = _geoService.getLastPosition();
   }
 
   Future<void> getForecast() async {
     setBusy(true);
-    if (position == null) {
-      await _getLocation();
-    }
+    await assertPosition();
+    Future.wait({
+      getTodayForecast(),
+      getWeekForecast(),
+      getMonthForecast(),
+    });
+    setBusy(false);
+  }
+
+  Future<void> getTodayForecast() async {
     todaysForecast =
         await _forecastService.getForecastForDate(DateTime.now(), position!);
-    setBusy(false);
+  }
+
+  Future<void> getWeekForecast() async {
+    weekForecast = await _forecastService.getForecastForDateRange(
+        DateTime.now(), DateTime.now().add(const Duration(days: 7)), position!);
+  }
+
+  Future<void> getMonthForecast() async {
+    monthForecast = await _forecastService.getForecastForDateRange(
+        DateTime.now(),
+        DateTime.now().add(const Duration(days: 30)),
+        position!);
+  }
+
+  Future<void> assertPosition() async {
+    if (position == null) {
+      await _updatePosition();
+    }
+  }
+
+  Future<String?> _updatePosition() async {
+    await _geoService.getCurrentPosition();
+    position = _geoService.getLastPosition();
   }
 }
