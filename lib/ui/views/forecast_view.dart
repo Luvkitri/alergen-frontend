@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/forecast_model.dart';
 import 'package:frontend/ui/shared/ui_helpers.dart';
 import 'package:frontend/ui/widgets/busy_indicator.dart';
 import 'package:frontend/viewmodels/forecast_view_model.dart';
@@ -25,16 +26,32 @@ class ForecastView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                        "location: (${model.position?.latitude} ${model.position?.longitude})"),
-                    Text(
-                        "in what region are you: ${model.todaysForecast?.region}"),
-                    Text("today is: ${model.todaysForecast?.date}"),
-                    Text(
-                        "allergens in air today: ${model.todaysForecast?.allergenTypeStrength}"),
-                    Text(
-                        "next 7 days - row ...${model.weekForecast?.map((e) => e.date)}"),
-                    Text(
-                        "next month - list ...${model.monthForecast?.map((e) => e.date)}"),
+                        "(location: (${model.position?.latitude} ${model.position?.longitude}))"),
+                    Text("(region: ${model.todaysForecast?.region})"),
+                    model.todaysForecast != null
+                        ? Text(
+                            "allergens today: ${model.todaysForecast?.allergenTypeStrength}")
+                        : Text("..."),
+                    model.weekForecast != null
+                        ? Expanded(
+                            child: ListView.builder(
+                            itemExtent: 90.0,
+                            itemBuilder: (context, index) =>
+                                buildWeekForecastList(context, index, model),
+                            itemCount: model.weekForecast?.length,
+                            scrollDirection: Axis.horizontal,
+                          ))
+                        : Text("..."),
+                    model.monthForecast != null
+                        ? Expanded(
+                            child: ListView.builder(
+                            itemExtent: 70.0,
+                            itemBuilder: (context, index) =>
+                                buildMonthForecastList(context, index, model),
+                            itemCount: model.monthForecast?.length,
+                            scrollDirection: Axis.vertical,
+                          ))
+                        : Text("..."),
                     smallSpacedDivider,
                     TextButton(
                         onPressed: () => {model.getForecast()},
@@ -50,5 +67,55 @@ class ForecastView extends StatelessWidget {
                 )),
       ),
     );
+  }
+
+  Widget buildMonthForecastList(
+      BuildContext context, int index, ForecastViewModel model) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+            "${model.monthForecast?[index].date.day}-${model.monthForecast?[index].date.month}"),
+        Expanded(
+            child: ListView.builder(
+          itemBuilder: (context, index) => buildMonthForecastAllergenList(
+              context, index, model.monthForecast?[index]),
+          itemCount: model.monthForecast?[index].allergenTypeStrength.length,
+          scrollDirection: Axis.horizontal,
+        )),
+      ],
+    );
+  }
+
+  Widget buildMonthForecastAllergenList(
+      BuildContext context, int index, ForecastItem? f) {
+    String? key = f?.allergenTypeStrength.keys.toList()[index];
+    return Text("$key -> ${f?.allergenTypeStrength[key]}");
+  }
+
+  Widget buildWeekForecastList(
+      BuildContext context, int index, ForecastViewModel model) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text(
+            "${model.weekForecast?[index].date.day}-${model.weekForecast?[index].date.month}"),
+        Expanded(
+            child: ListView.builder(
+          itemBuilder: (context, index) => buildWeekForecastAllergenList(
+              context, index, model.weekForecast?[index]),
+          itemCount: model.weekForecast?[index].allergenTypeStrength.length,
+        )),
+      ],
+    );
+  }
+
+  Widget buildWeekForecastAllergenList(
+      BuildContext context, int index, ForecastItem? f) {
+    String? key = f?.allergenTypeStrength.keys.toList()[index];
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Text("$key - ${f?.allergenTypeStrength[key]}")]);
   }
 }
