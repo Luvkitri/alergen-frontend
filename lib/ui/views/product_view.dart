@@ -18,6 +18,7 @@ class ProductView extends StatelessWidget {
       viewModelBuilder: () => ProductViewModel(),
       onModelReady: (model) {
         model.product = product;
+        model.getAllergiesList();
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
@@ -79,6 +80,7 @@ class ProductView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(child: Text(p.allergens[index])),
+            Text("${model.userHasAllergy(p.allergens[index])}"),
             ElevatedButton(
               onPressed: () => {},
               child: const Text('placeholder'),
