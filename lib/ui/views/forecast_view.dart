@@ -31,27 +31,27 @@ class ForecastView extends StatelessWidget {
                     model.todaysForecast != null
                         ? Text(
                             "allergens today: ${model.todaysForecast?.allergenTypeStrength}")
-                        : Text("..."),
+                        : const Text("..."),
                     model.weekForecast != null
                         ? Expanded(
                             child: ListView.builder(
                             itemExtent: 90.0,
                             itemBuilder: (context, index) =>
-                                buildWeekForecastList(context, index, model),
+                                _buildWeekForecastList(context, index, model),
                             itemCount: model.weekForecast?.length,
                             scrollDirection: Axis.horizontal,
                           ))
-                        : Text("..."),
+                        : const Text("..."),
                     model.monthForecast != null
                         ? Expanded(
                             child: ListView.builder(
                             itemExtent: 70.0,
                             itemBuilder: (context, index) =>
-                                buildMonthForecastList(context, index, model),
+                                _buildMonthForecastList(context, index, model),
                             itemCount: model.monthForecast?.length,
                             scrollDirection: Axis.vertical,
                           ))
-                        : Text("..."),
+                        : const Text("..."),
                     smallSpacedDivider,
                     TextButton(
                         onPressed: () => {model.getForecast()},
@@ -69,7 +69,7 @@ class ForecastView extends StatelessWidget {
     );
   }
 
-  Widget buildMonthForecastList(
+  Widget _buildMonthForecastList(
       BuildContext context, int index, ForecastViewModel model) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -79,7 +79,7 @@ class ForecastView extends StatelessWidget {
             "${model.monthForecast?[index].date.day}-${model.monthForecast?[index].date.month}"),
         Expanded(
             child: ListView.builder(
-          itemBuilder: (context, index) => buildMonthForecastAllergenList(
+          itemBuilder: (context, index) => _buildMonthForecastAllergenList(
               context, index, model.monthForecast?[index]),
           itemCount: model.monthForecast?[index].allergenTypeStrength.length,
           scrollDirection: Axis.horizontal,
@@ -88,13 +88,13 @@ class ForecastView extends StatelessWidget {
     );
   }
 
-  Widget buildMonthForecastAllergenList(
+  Widget _buildMonthForecastAllergenList(
       BuildContext context, int index, ForecastItem? f) {
     String? key = f?.allergenTypeStrength.keys.toList()[index];
     return Text("$key -> ${f?.allergenTypeStrength[key]}");
   }
 
-  Widget buildWeekForecastList(
+  Widget _buildWeekForecastList(
       BuildContext context, int index, ForecastViewModel model) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -103,7 +103,7 @@ class ForecastView extends StatelessWidget {
             "${model.weekForecast?[index].date.day}-${model.weekForecast?[index].date.month}"),
         Expanded(
             child: ListView.builder(
-          itemBuilder: (context, index) => buildWeekForecastAllergenList(
+          itemBuilder: (context, index) => _buildWeekForecastAllergenList(
               context, index, model.weekForecast?[index]),
           itemCount: model.weekForecast?[index].allergenTypeStrength.length,
         )),
@@ -111,7 +111,7 @@ class ForecastView extends StatelessWidget {
     );
   }
 
-  Widget buildWeekForecastAllergenList(
+  Widget _buildWeekForecastAllergenList(
       BuildContext context, int index, ForecastItem? f) {
     String? key = f?.allergenTypeStrength.keys.toList()[index];
     return Row(

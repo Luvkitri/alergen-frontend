@@ -17,7 +17,7 @@ class ForecastViewModel extends BaseModel {
 
   List<ForecastItem>? monthForecast;
 
-  Future<String?> getLocation() async {
+  Future<void> getLocation() async {
     setBusy(true);
     await _updatePosition();
     setBusy(false);
@@ -57,7 +57,7 @@ class ForecastViewModel extends BaseModel {
     }
   }
 
-  Future<String?> _updatePosition() async {
+  Future<void> _updatePosition() async {
     await _geoService.getCurrentPosition();
     position = _geoService.getLastPosition();
   }
