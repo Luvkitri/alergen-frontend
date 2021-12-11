@@ -45,8 +45,8 @@ class ProductView extends StatelessWidget {
                       ? Expanded(
                           child: ListView.builder(
                           itemExtent: 60.0,
-                          itemBuilder: (context, index) =>
-                              buildAllergenList(context, index, model, product),
+                          itemBuilder: (context, index) => _buildAllergenList(
+                              context, index, model, product),
                           itemCount: product.allergens.length,
                         ))
                       : const Text("Haven't found any allergens"),
@@ -72,7 +72,7 @@ class ProductView extends StatelessWidget {
     );
   }
 
-  Widget buildAllergenList(
+  Widget _buildAllergenList(
       BuildContext context, int index, ProductViewModel model, Product p) {
     bool userHasAllergy = model.userHasAllergy(p.allergens[index]);
     return Container(
