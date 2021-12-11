@@ -74,18 +74,20 @@ class ProductView extends StatelessWidget {
 
   Widget buildAllergenList(
       BuildContext context, int index, ProductViewModel model, Product p) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(child: Text(p.allergens[index])),
-            Text("${model.userHasAllergy(p.allergens[index])}"),
-            ElevatedButton(
-              onPressed: () => {},
-              child: const Text('placeholder'),
-            ),
-          ],
-        ));
+    bool userHasAllergy = model.userHasAllergy(p.allergens[index]);
+    return Container(
+        color: userHasAllergy ? Colors.redAccent[100] : null,
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: Text(p.allergens[index])),
+                ElevatedButton(
+                  onPressed: () => {},
+                  child: const Text('placeholder'),
+                ),
+              ],
+            )));
   }
 }
