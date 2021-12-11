@@ -3,6 +3,7 @@ import 'package:frontend/constants/route_names.dart';
 import 'package:frontend/ui/views/add_allergies_view.dart';
 import 'package:frontend/ui/views/allergies_view.dart';
 import 'package:frontend/ui/views/example_view.dart';
+import 'package:frontend/ui/views/forecast_view.dart';
 import 'package:frontend/ui/views/home_view.dart';
 import 'package:frontend/ui/views/product_view.dart';
 import 'package:frontend/ui/views/scanner_view.dart';
@@ -36,6 +37,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         settings.name!,
         const StartUpView(),
       );
+    case forecastRoute:
+      return _getPageRoute(settings.name!, const ForecastView());
     case allergiesViewRoute:
       return _getPageRoute(
         settings.name!,

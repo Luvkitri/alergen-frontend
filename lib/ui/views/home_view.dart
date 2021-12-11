@@ -21,6 +21,10 @@ class HomeView extends StatelessWidget {
           title: const Text("HomeView"),
           actions: [
             IconButton(
+              icon: const Icon(Icons.wb_sunny),
+              onPressed: model.navigateToForecast,
+            ),
+            IconButton(
               icon: const Icon(Icons.account_box),
               onPressed: model.navigateToUserInfoForm,
             ),
@@ -43,6 +47,8 @@ class HomeView extends StatelessWidget {
                       menuButton(model.navigateToUserInfoForm, 'User info'),
                       verticalSpaceSmall,
                       menuButton(model.navigateToScanner, 'Bar code scanner'),
+                      verticalSpaceSmall,
+                      menuButton(model.navigateToForecast, 'Forecast'),
                     ],
                   ),
                 ),
