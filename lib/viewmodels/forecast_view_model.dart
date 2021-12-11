@@ -37,11 +37,13 @@ class ForecastViewModel extends BaseModel {
   Future<void> getTodayForecast() async {
     todaysForecast =
         await _forecastService.getForecastForDate(DateTime.now(), position!);
+    notifyListeners();
   }
 
   Future<void> getWeekForecast() async {
     weekForecast = await _forecastService.getForecastForDateRange(
         DateTime.now(), DateTime.now().add(const Duration(days: 7)), position!);
+    notifyListeners();
   }
 
   Future<void> getMonthForecast() async {
@@ -49,6 +51,7 @@ class ForecastViewModel extends BaseModel {
         DateTime.now(),
         DateTime.now().add(const Duration(days: 30)),
         position!);
+    notifyListeners();
   }
 
   Future<void> assertPosition() async {
