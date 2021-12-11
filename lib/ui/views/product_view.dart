@@ -18,6 +18,7 @@ class ProductView extends StatelessWidget {
       viewModelBuilder: () => ProductViewModel(),
       onModelReady: (model) {
         model.product = product;
+        model.getAllergiesList();
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
@@ -44,8 +45,8 @@ class ProductView extends StatelessWidget {
                       ? Expanded(
                           child: ListView.builder(
                           itemExtent: 60.0,
-                          itemBuilder: (context, index) =>
-                              buildAllergenList(context, index, model, product),
+                          itemBuilder: (context, index) => _buildAllergenList(
+                              context, index, model, product),
                           itemCount: product.allergens.length,
                         ))
                       : const Text("Haven't found any allergens"),
@@ -71,19 +72,22 @@ class ProductView extends StatelessWidget {
     );
   }
 
-  Widget buildAllergenList(
+  Widget _buildAllergenList(
       BuildContext context, int index, ProductViewModel model, Product p) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(child: Text(p.allergens[index])),
-            ElevatedButton(
-              onPressed: () => {},
-              child: const Text('placeholder'),
-            ),
-          ],
-        ));
+    bool userHasAllergy = model.userHasAllergy(p.allergens[index]);
+    return Container(
+        color: userHasAllergy ? Colors.redAccent[100] : null,
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: Text(p.allergens[index])),
+                ElevatedButton(
+                  onPressed: () => {},
+                  child: const Text('placeholder'),
+                ),
+              ],
+            )));
   }
 }

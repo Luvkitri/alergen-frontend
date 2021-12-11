@@ -59,11 +59,7 @@ class ScannerViewModel extends BaseModel {
     if (sampleCodes.isNotEmpty) {
       setBusy(true);
       String code = sampleCodes[Random().nextInt(sampleCodes.length)];
-      Product p = await addUniqueProductFromCode(code);
-      for (int i = 0; i < 30; i++) {
-        p.allergens.add(
-            'random allergen just to fill list and overflow text field $i');
-      }
+      await addUniqueProductFromCode(code);
       sampleCodes.remove(code);
       setBusy(false);
     }
