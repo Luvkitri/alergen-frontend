@@ -25,36 +25,33 @@ class ForecastViewModel extends BaseModel {
 
   Future<void> getForecast() async {
     setBusy(true);
-    await assertPosition();
+    await _assertPosition();
     Future.wait({
-      getTodayForecast(),
-      getWeekForecast(),
-      getMonthForecast(),
+      _getTodayForecast(),
+      _getWeekForecast(),
+      _getMonthForecast(),
     });
     setBusy(false);
   }
 
-  Future<void> getTodayForecast() async {
+  Future<void> _getTodayForecast() async {
     todaysForecast =
         await _forecastService.getForecastForDate(DateTime.now(), position!);
-    notifyListeners();
   }
 
-  Future<void> getWeekForecast() async {
+  Future<void> _getWeekForecast() async {
     weekForecast = await _forecastService.getForecastForDateRange(
         DateTime.now(), DateTime.now().add(const Duration(days: 7)), position!);
-    notifyListeners();
   }
 
-  Future<void> getMonthForecast() async {
+  Future<void> _getMonthForecast() async {
     monthForecast = await _forecastService.getForecastForDateRange(
         DateTime.now(),
         DateTime.now().add(const Duration(days: 30)),
         position!);
-    notifyListeners();
   }
 
-  Future<void> assertPosition() async {
+  Future<void> _assertPosition() async {
     if (position == null) {
       await _updatePosition();
     }
