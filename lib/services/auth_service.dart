@@ -23,8 +23,14 @@ class AuthService {
     var resp = await http.get(
       Uri.parse(urlS + '/users/' + userid),
     );
+
     if (resp.statusCode == 200) {
       var userResp = jsonDecode(resp.body);
+      // if current userid not in database, get new userid
+      if (userResp == null) {
+        String? userid = await getNewUserID();
+        return userid;
+      }
       String userid = userResp['id'];
       user = User.fromData(userResp);
       return userid;
