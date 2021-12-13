@@ -33,12 +33,6 @@ class AllergiesService {
         userAllergies.add(Allergy.fromData(a));
         userAllergies.sort((a, b) => a.id.compareTo(b.id));
       }
-      // TODO: delete when allergies in database are in english
-      // just to test allergy highlight
-      userAllergies.add(Allergy(100, 'milk', 'milk', 'food'));
-      userAllergies.add(Allergy(200, 'nuts', 'nuts', 'food'));
-      userAllergies.add(Allergy(300, 'celery', 'celery', 'food'));
-      //
       return userAllergies;
     } else {
       return null;
