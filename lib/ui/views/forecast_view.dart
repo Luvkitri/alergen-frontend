@@ -10,6 +10,16 @@ import 'package:intl/intl.dart';
 class ForecastView extends StatelessWidget {
   const ForecastView({Key? key}) : super(key: key);
 
+  List<Widget> getAllergenChipList(ForecastItem fi) {
+    return fi!.allergenTypeStrength.entries
+        .where((element) => element.value > 0)
+        .map((e) => Chip(
+              backgroundColor: getAllergenChipColor(e.value),
+              label: Text(e.key),
+            ))
+        .toList();
+  }
+
   Color getAllergenChipColor(int strength) {
     switch (strength) {
       case 0:
@@ -73,22 +83,22 @@ class ForecastView extends StatelessWidget {
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
+              icon: const Icon(Icons.calendar_today),
               label: 'Today',
               backgroundColor: Colors.purple.shade700,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.view_week),
+              icon: const Icon(Icons.view_week),
               label: 'Week',
               backgroundColor: Colors.purple.shade600,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_view_month),
+              icon: const Icon(Icons.calendar_view_month),
               label: 'Month',
               backgroundColor: Colors.purple.shade500,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.map),
+              icon: const Icon(Icons.map),
               label: 'Map',
               backgroundColor: Colors.purple.shade400,
             ),
@@ -142,20 +152,18 @@ class ForecastView extends StatelessWidget {
         body: model.busy
             ? const BusyIndicator()
             : Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    model.weekForecast != null
-                        ? Expanded(
-                            child: ListView.builder(
-                            itemBuilder: (context, index) =>
-                                _buildWeekForecastList(context, index, model),
-                            itemCount: model.weekForecast?.length,
-                            scrollDirection: Axis.horizontal,
-                          ))
-                        : const Text("..."),
+                    Expanded(
+                        child: ListView.builder(
+                      itemBuilder: (context, index) =>
+                          _buildWeekForecastList(context, index, model),
+                      itemCount: model.weekForecast?.length,
+                      scrollDirection: Axis.horizontal,
+                    )),
                     smallSpacedDivider,
                     TextButton(
                         onPressed: () => {model.getForecast()},
@@ -200,15 +208,8 @@ class ForecastView extends StatelessWidget {
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: model
-                                .todaysForecast!.allergenTypeStrength.entries
-                                .where((element) => element.value > 0)
-                                .map((e) => Chip(
-                                      backgroundColor:
-                                          getAllergenChipColor(e.value),
-                                      label: Text(e.key),
-                                    ))
-                                .toList(),
+                            children:
+                                getAllergenChipList(model.todaysForecast!),
                           )
                         ],
                       ),
@@ -255,19 +256,18 @@ class ForecastView extends StatelessWidget {
 
   Widget _buildWeekForecastList(
       BuildContext context, int i, ForecastViewModel model) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Text(
-            "${model.weekForecast?[i].date.day}-${model.weekForecast?[i].date.month}"),
-        Expanded(
-            child: ListView.builder(
-          itemBuilder: (context, index) => _buildWeekForecastAllergenList(
-              context, index, model.weekForecast?[i]),
-          itemCount: model.weekForecast?[i].allergenTypeStrength.length,
-        )),
-      ],
-    );
+    return Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(DateFormat('EEEE').format(model.weekForecast![i].date)),
+            Text(DateFormat('yyyy MMM dd').format(model.weekForecast![i].date)),
+            Text(
+                " ${model.weekForecast![i].allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s that day:"),
+            ...getAllergenChipList(model.weekForecast![i])
+          ],
+        ));
   }
 
   Widget _buildWeekForecastAllergenList(
