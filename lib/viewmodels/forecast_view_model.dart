@@ -20,7 +20,7 @@ class ForecastViewModel extends BaseModel {
   DateTime today = DateTime.now();
 
   //view vars
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   void setIndex(int index) {
     _selectedIndex = index;

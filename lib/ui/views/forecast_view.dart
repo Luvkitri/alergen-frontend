@@ -26,13 +26,17 @@ class ForecastView extends StatelessWidget {
     switch (index) {
       case 0:
         {
-          return buildFutureForecast(context);
+          return buildToday(context);
         }
       case 1:
         {
-          return buildToday(context);
+          return buildWeek(context);
         }
       case 2:
+        {
+          return buildMonth(context);
+        }
+      case 3:
         {
           return const Text("Here will be map");
         }
@@ -56,32 +60,37 @@ class ForecastView extends StatelessWidget {
             ? const BusyIndicator()
             : _getWidget(model.getIndex(), context),
         bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Forecast',
-              backgroundColor: Colors.red,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.business),
+              icon: Icon(Icons.calendar_today),
               label: 'Today',
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.purple.shade700,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.school),
+              icon: Icon(Icons.view_week),
+              label: 'Week',
+              backgroundColor: Colors.purple.shade600,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_view_month),
+              label: 'Month',
+              backgroundColor: Colors.purple.shade500,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.map),
               label: 'Map',
-              backgroundColor: Colors.purple,
+              backgroundColor: Colors.purple.shade400,
             ),
           ],
           currentIndex: model.getIndex(),
-          selectedItemColor: Colors.amber[800],
+          selectedItemColor: Colors.amberAccent.shade100,
           onTap: (i) => {model.setIndex(i)},
         ),
       ),
     );
   }
 
-  Widget buildFutureForecast(BuildContext context) {
+  Widget buildMonth(BuildContext context) {
     return ViewModelBuilder<ForecastViewModel>.reactive(
       viewModelBuilder: () => ForecastViewModel(),
       onModelReady: (viewmodel) => {viewmodel.getForecast()},
@@ -94,11 +103,6 @@ class ForecastView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                        "(location: (${model.position?.latitude} ${model.position?.longitude}))"),
-                    Text("(region: ${model.todaysForecast?.region})"),
-                    smallSpacedDivider,
-                    smallSpacedDivider,
                     model.weekForecast != null
                         ? Expanded(
                             child: ListView.builder(
@@ -122,15 +126,56 @@ class ForecastView extends StatelessWidget {
                     smallSpacedDivider,
                     TextButton(
                         onPressed: () => {model.getForecast()},
-                        child: const Text(
-                            "refresh forecast for current location")),
-                    TextButton(
-                        onPressed: () => {model.getLocation()},
-                        child: const Text("refresh location")),
+                        child: const Text("refresh forecast")),
                     TextButton(
                         onPressed: () => {model.getForecast(add180days: true)},
-                        child: const Text(
-                            "refresh forecast for current location (+180days)"))
+                        child: const Text("refresh forecast (+180days)"))
+                  ],
+                )),
+      ),
+    );
+  }
+
+  Widget buildWeek(BuildContext context) {
+    return ViewModelBuilder<ForecastViewModel>.reactive(
+      viewModelBuilder: () => ForecastViewModel(),
+      onModelReady: (viewmodel) => {viewmodel.getForecast()},
+      builder: (context, model, child) => Scaffold(
+        body: model.busy
+            ? const BusyIndicator()
+            : Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    model.weekForecast != null
+                        ? Expanded(
+                            child: ListView.builder(
+                            itemExtent: 120.0,
+                            itemBuilder: (context, index) =>
+                                _buildWeekForecastList(context, index, model),
+                            itemCount: model.weekForecast?.length,
+                            scrollDirection: Axis.horizontal,
+                          ))
+                        : const Text("..."),
+                    model.monthForecast != null
+                        ? Expanded(
+                            child: ListView.builder(
+                            itemExtent: 30.0,
+                            itemBuilder: (context, index) =>
+                                _buildMonthForecastList(context, index, model),
+                            itemCount: model.monthForecast?.length,
+                            scrollDirection: Axis.vertical,
+                          ))
+                        : const Text("..."),
+                    smallSpacedDivider,
+                    TextButton(
+                        onPressed: () => {model.getForecast()},
+                        child: const Text("refresh forecast")),
+                    TextButton(
+                        onPressed: () => {model.getForecast(add180days: true)},
+                        child: const Text("refresh forecast (+180days)"))
                   ],
                 )),
       ),
