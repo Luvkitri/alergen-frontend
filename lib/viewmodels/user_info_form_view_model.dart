@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:frontend/constants/route_names.dart';
@@ -72,7 +71,6 @@ class UserInfoFromViewModel extends BaseModel {
     _navigationService.popUntilHomeView();
     _navigationService.pop();
     _navigationService.navigateTo(startUpViewRoute);
-
   }
 
   void setUsersSex(String? value) {
