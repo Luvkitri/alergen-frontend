@@ -4,9 +4,44 @@ import 'package:frontend/ui/shared/ui_helpers.dart';
 import 'package:frontend/ui/widgets/busy_indicator.dart';
 import 'package:frontend/viewmodels/forecast_view_model.dart';
 import 'package:stacked/stacked.dart';
+import 'package:intl/intl.dart';
 
 class ForecastView extends StatelessWidget {
   const ForecastView({Key? key}) : super(key: key);
+
+  Color getAllergenChipColor(int strength) {
+    switch (strength) {
+      case 0:
+        return Colors.yellow.shade100;
+      case 1:
+        return Colors.orange.shade100;
+      case 2:
+        return Colors.red.shade100;
+      default:
+        return Colors.blue.shade100;
+    }
+  }
+
+  Widget _getWidget(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        {
+          return buildFutureForecast(context);
+        }
+      case 1:
+        {
+          return buildToday(context);
+        }
+      case 2:
+        {
+          return const Text("Here will be map");
+        }
+      default:
+        {
+          return const Text("???");
+        }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +54,40 @@ class ForecastView extends StatelessWidget {
         ),
         body: model.busy
             ? const BusyIndicator()
+            : _getWidget(model.getIndex(), context),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Forecast',
+              backgroundColor: Colors.red,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.business),
+              label: 'Today',
+              backgroundColor: Colors.green,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.school),
+              label: 'Map',
+              backgroundColor: Colors.purple,
+            ),
+          ],
+          currentIndex: model.getIndex(),
+          selectedItemColor: Colors.amber[800],
+          onTap: (i) => {model.setIndex(i)},
+        ),
+      ),
+    );
+  }
+
+  Widget buildFutureForecast(BuildContext context) {
+    return ViewModelBuilder<ForecastViewModel>.reactive(
+      viewModelBuilder: () => ForecastViewModel(),
+      onModelReady: (viewmodel) => {viewmodel.getForecast()},
+      builder: (context, model, child) => Scaffold(
+        body: model.busy
+            ? const BusyIndicator()
             : Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
@@ -29,10 +98,6 @@ class ForecastView extends StatelessWidget {
                         "(location: (${model.position?.latitude} ${model.position?.longitude}))"),
                     Text("(region: ${model.todaysForecast?.region})"),
                     smallSpacedDivider,
-                    model.todaysForecast != null
-                        ? Text(
-                            "allergens today: ${model.todaysForecast?.allergenTypeStrength.entries.where((element) => element.value > 0).map((e) => '${e.key}:${e.value}')}")
-                        : const Text("..."),
                     smallSpacedDivider,
                     model.weekForecast != null
                         ? Expanded(
@@ -61,10 +126,68 @@ class ForecastView extends StatelessWidget {
                             "refresh forecast for current location")),
                     TextButton(
                         onPressed: () => {model.getLocation()},
-                        child: const Text("refresh current location")),
+                        child: const Text("refresh location")),
                     TextButton(
-                        onPressed: () => {},
-                        child: const Text("change location (not ready)"))
+                        onPressed: () => {model.getForecast(add180days: true)},
+                        child: const Text(
+                            "refresh forecast for current location (+180days)"))
+                  ],
+                )),
+      ),
+    );
+  }
+
+  Widget buildToday(BuildContext context) {
+    return ViewModelBuilder<ForecastViewModel>.reactive(
+      viewModelBuilder: () => ForecastViewModel(),
+      onModelReady: (viewmodel) => {viewmodel.getForecast()},
+      builder: (context, model, child) => Scaffold(
+        body: model.busy
+            ? const BusyIndicator()
+            : Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                        "(location: (${model.position?.latitude} ${model.position?.longitude}), region: ${model.todaysForecast?.region})"),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(DateFormat('EEEE').format(model.today)),
+                              Text(DateFormat('yyyy MMM dd')
+                                  .format(model.today)),
+                              Text(
+                                  " ${model.todaysForecast!.allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s today:"),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: model
+                                .todaysForecast!.allergenTypeStrength.entries
+                                .where((element) => element.value > 0)
+                                .map((e) => Chip(
+                                      backgroundColor:
+                                          getAllergenChipColor(e.value),
+                                      label: Text(e.key),
+                                    ))
+                                .toList(),
+                          )
+                        ],
+                      ),
+                    ),
+                    smallSpacedDivider,
+                    TextButton(
+                        onPressed: () => {model.getForecast()},
+                        child: const Text("refresh forecast")),
+                    TextButton(
+                        onPressed: () => {model.getForecast(add180days: true)},
+                        child: const Text("refresh forecast (+180days)"))
                   ],
                 )),
       ),

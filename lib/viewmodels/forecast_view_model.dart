@@ -17,16 +17,33 @@ class ForecastViewModel extends BaseModel {
 
   List<ForecastItem>? monthForecast;
 
+  DateTime today = DateTime.now();
+
+  //view vars
+  int _selectedIndex = 1;
+
+  void setIndex(int index) {
+    _selectedIndex = index;
+    notifyListeners();
+  }
+
+  int getIndex() {
+    return _selectedIndex;
+  }
+
   Future<void> getLocation() async {
     setBusy(true);
     await _updatePosition();
     setBusy(false);
   }
 
-  Future<void> getForecast() async {
+  Future<void> getForecast({bool add180days = false}) async {
     setBusy(true);
+
+    today = DateTime.now().add(Duration(days: add180days ? 180 : 0));
+
     await _assertPosition();
-    Future.wait({
+    await Future.wait({
       _getTodayForecast(),
       _getWeekForecast(),
       _getMonthForecast(),
@@ -36,22 +53,26 @@ class ForecastViewModel extends BaseModel {
 
   Future<void> _getTodayForecast() async {
     todaysForecast =
-        await _forecastService.getForecastForDate(DateTime.now(), position!);
+        await _forecastService.getForecastForDate(today, position!);
   }
 
   Future<void> _getWeekForecast() async {
     weekForecast = await _forecastService.getForecastForDateRange(
-        DateTime.now(), DateTime.now().add(const Duration(days: 7)), position!);
+        today, today.add(const Duration(days: 7)), position!);
   }
 
   Future<void> _getMonthForecast() async {
     monthForecast = await _forecastService.getForecastForDateRange(
-        DateTime.now(),
-        DateTime.now().add(const Duration(days: 30)),
-        position!);
+        today, today.add(const Duration(days: 30)), position!);
   }
 
   Future<void> _assertPosition() async {
+    try {
+      position = _geoService.getLastPosition();
+    } catch (e) {
+      position == null;
+    }
+
     if (position == null) {
       await _updatePosition();
     }
