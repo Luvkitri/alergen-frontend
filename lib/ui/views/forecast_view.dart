@@ -1,4 +1,3 @@
-import "dart:math";
 import 'package:flutter/material.dart';
 import 'package:frontend/models/forecast_model.dart';
 import 'package:frontend/ui/shared/ui_helpers.dart';
@@ -11,7 +10,7 @@ class ForecastView extends StatelessWidget {
   const ForecastView({Key? key}) : super(key: key);
 
   List<Widget> getAllergenChipList(ForecastItem fi) {
-    return fi!.allergenTypeStrength.entries
+    return fi.allergenTypeStrength.entries
         .where((element) => element.value > 0)
         .map((e) => Chip(
               backgroundColor: getAllergenChipColor(e.value),
@@ -35,11 +34,23 @@ class ForecastView extends StatelessWidget {
 
   Icon getAllergenIcon(int strength, double size) {
     if (strength <= 5) {
-      return Icon(Icons.check, size: size, color: Colors.green);
+      return Icon(
+        Icons.check,
+        size: size,
+        color: Colors.green,
+      );
     } else if (strength <= 10) {
-      return Icon(Icons.warning, size: size, color: Colors.orange);
+      return Icon(
+        Icons.warning,
+        size: size,
+        color: Colors.orange,
+      );
     } else {
-      return Icon(Icons.error, size: size, color: Colors.red);
+      return Icon(
+        Icons.error,
+        size: size,
+        color: Colors.red,
+      );
     }
   }
 
@@ -72,7 +83,9 @@ class ForecastView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ForecastViewModel>.reactive(
       viewModelBuilder: () => ForecastViewModel(),
-      onModelReady: (viewmodel) => {viewmodel.getForecast()},
+      onModelReady: (viewmodel) => {
+        viewmodel.getForecast(),
+      },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: const Text("Forecast View"),
@@ -105,7 +118,9 @@ class ForecastView extends StatelessWidget {
           ],
           currentIndex: model.getIndex(),
           selectedItemColor: Colors.amberAccent.shade100,
-          onTap: (i) => {model.setIndex(i)},
+          onTap: (i) => {
+            model.setIndex(i),
+          },
         ),
       ),
     );
@@ -114,7 +129,9 @@ class ForecastView extends StatelessWidget {
   Widget buildMonth(BuildContext context) {
     return ViewModelBuilder<ForecastViewModel>.reactive(
       viewModelBuilder: () => ForecastViewModel(),
-      onModelReady: (viewmodel) => {viewmodel.getForecast()},
+      onModelReady: (viewmodel) => {
+        viewmodel.getForecast(),
+      },
       builder: (context, model, child) => Scaffold(
         body: model.busy
             ? const BusyIndicator()
@@ -133,13 +150,20 @@ class ForecastView extends StatelessWidget {
                     )),
                     smallSpacedDivider,
                     TextButton(
-                        onPressed: () => {model.getForecast()},
-                        child: const Text("refresh forecast")),
+                      onPressed: () => {
+                        model.getForecast(),
+                      },
+                      child: const Text("refresh forecast"),
+                    ),
                     TextButton(
-                        onPressed: () => {model.getForecast(add180days: true)},
-                        child: const Text("refresh forecast (+180days)"))
+                      onPressed: () => {
+                        model.getForecast(add180days: true),
+                      },
+                      child: const Text("refresh forecast (+180days)"),
+                    )
                   ],
-                )),
+                ),
+              ),
       ),
     );
   }
@@ -147,7 +171,9 @@ class ForecastView extends StatelessWidget {
   Widget buildWeek(BuildContext context) {
     return ViewModelBuilder<ForecastViewModel>.reactive(
       viewModelBuilder: () => ForecastViewModel(),
-      onModelReady: (viewmodel) => {viewmodel.getForecast()},
+      onModelReady: (viewmodel) => {
+        viewmodel.getForecast(),
+      },
       builder: (context, model, child) => Scaffold(
         body: model.busy
             ? const BusyIndicator()
@@ -166,13 +192,20 @@ class ForecastView extends StatelessWidget {
                     )),
                     smallSpacedDivider,
                     TextButton(
-                        onPressed: () => {model.getForecast()},
-                        child: const Text("refresh forecast")),
+                      onPressed: () => {
+                        model.getForecast(),
+                      },
+                      child: const Text("refresh forecast"),
+                    ),
                     TextButton(
-                        onPressed: () => {model.getForecast(add180days: true)},
-                        child: const Text("refresh forecast (+180days)"))
+                      onPressed: () => {
+                        model.getForecast(add180days: true),
+                      },
+                      child: const Text("refresh forecast (+180days)"),
+                    )
                   ],
-                )),
+                ),
+              ),
       ),
     );
   }
@@ -199,9 +232,12 @@ class ForecastView extends StatelessWidget {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(DateFormat('EEEE').format(model.today)),
-                              Text(DateFormat('yyyy MMM dd')
-                                  .format(model.today)),
+                              Text(
+                                DateFormat('EEEE').format(model.today),
+                              ),
+                              Text(
+                                DateFormat('yyyy MMM dd').format(model.today),
+                              ),
                               Text(
                                   " ${model.todaysForecast!.allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s today:"),
                             ],
@@ -216,11 +252,17 @@ class ForecastView extends StatelessWidget {
                     ),
                     smallSpacedDivider,
                     TextButton(
-                        onPressed: () => {model.getForecast()},
-                        child: const Text("refresh forecast")),
+                      onPressed: () => {
+                        model.getForecast(),
+                      },
+                      child: const Text("refresh forecast"),
+                    ),
                     TextButton(
-                        onPressed: () => {model.getForecast(add180days: true)},
-                        child: const Text("refresh forecast (+180days)"))
+                      onPressed: () => {
+                        model.getForecast(add180days: true),
+                      },
+                      child: const Text("refresh forecast (+180days)"),
+                    )
                   ],
                 )),
       ),
@@ -248,7 +290,7 @@ class ForecastView extends StatelessWidget {
       child: ListTile(
         leading: getAllergenIcon(dangerThatDay, 56.0),
         title: Text(
-            "${DateFormat('MMM dd').format(model.monthForecast![index].date)}, ${allergensStrong}"),
+            "${DateFormat('MMM dd').format(model.monthForecast![index].date)}, $allergensStrong"),
         subtitle: Text("$allergensMedium"),
       ),
     );
@@ -261,8 +303,12 @@ class ForecastView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(DateFormat('EEEE').format(model.weekForecast![i].date)),
-            Text(DateFormat('yyyy MMM dd').format(model.weekForecast![i].date)),
+            Text(
+              DateFormat('EEEE').format(model.weekForecast![i].date),
+            ),
+            Text(
+              DateFormat('yyyy MMM dd').format(model.weekForecast![i].date),
+            ),
             Text(
                 " ${model.weekForecast![i].allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s that day:"),
             ...getAllergenChipList(model.weekForecast![i])
@@ -277,8 +323,11 @@ class ForecastView extends StatelessWidget {
       return Container();
     } else {
       return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text("$key: ${f.allergenTypeStrength[key]}")]);
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("$key: ${f.allergenTypeStrength[key]}"),
+        ],
+      );
     }
   }
 }
