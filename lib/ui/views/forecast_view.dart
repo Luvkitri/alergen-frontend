@@ -1,3 +1,4 @@
+import "dart:math";
 import 'package:flutter/material.dart';
 import 'package:frontend/models/forecast_model.dart';
 import 'package:frontend/ui/shared/ui_helpers.dart';
@@ -12,13 +13,23 @@ class ForecastView extends StatelessWidget {
   Color getAllergenChipColor(int strength) {
     switch (strength) {
       case 0:
-        return Colors.yellow.shade100;
+        return Colors.yellow;
       case 1:
-        return Colors.orange.shade100;
+        return Colors.orange;
       case 2:
-        return Colors.red.shade100;
+        return Colors.red;
       default:
-        return Colors.blue.shade100;
+        return Colors.blue;
+    }
+  }
+
+  Icon getAllergenIcon(int strength, double size) {
+    if (strength <= 5) {
+      return Icon(Icons.check, size: size, color: Colors.green);
+    } else if (strength <= 10) {
+      return Icon(Icons.warning, size: size, color: Colors.orange);
+    } else {
+      return Icon(Icons.error, size: size, color: Colors.red);
     }
   }
 
@@ -98,31 +109,18 @@ class ForecastView extends StatelessWidget {
         body: model.busy
             ? const BusyIndicator()
             : Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    model.weekForecast != null
-                        ? Expanded(
-                            child: ListView.builder(
-                            itemExtent: 120.0,
-                            itemBuilder: (context, index) =>
-                                _buildWeekForecastList(context, index, model),
-                            itemCount: model.weekForecast?.length,
-                            scrollDirection: Axis.horizontal,
-                          ))
-                        : const Text("..."),
-                    model.monthForecast != null
-                        ? Expanded(
-                            child: ListView.builder(
-                            itemExtent: 30.0,
-                            itemBuilder: (context, index) =>
-                                _buildMonthForecastList(context, index, model),
-                            itemCount: model.monthForecast?.length,
-                            scrollDirection: Axis.vertical,
-                          ))
-                        : const Text("..."),
+                    Expanded(
+                        child: ListView.builder(
+                      itemBuilder: (context, index) =>
+                          _buildMonthForecastList(context, index, model),
+                      itemCount: model.monthForecast?.length,
+                      scrollDirection: Axis.vertical,
+                    )),
                     smallSpacedDivider,
                     TextButton(
                         onPressed: () => {model.getForecast()},
@@ -152,21 +150,10 @@ class ForecastView extends StatelessWidget {
                     model.weekForecast != null
                         ? Expanded(
                             child: ListView.builder(
-                            itemExtent: 120.0,
                             itemBuilder: (context, index) =>
                                 _buildWeekForecastList(context, index, model),
                             itemCount: model.weekForecast?.length,
                             scrollDirection: Axis.horizontal,
-                          ))
-                        : const Text("..."),
-                    model.monthForecast != null
-                        ? Expanded(
-                            child: ListView.builder(
-                            itemExtent: 30.0,
-                            itemBuilder: (context, index) =>
-                                _buildMonthForecastList(context, index, model),
-                            itemCount: model.monthForecast?.length,
-                            scrollDirection: Axis.vertical,
                           ))
                         : const Text("..."),
                     smallSpacedDivider,
@@ -241,32 +228,29 @@ class ForecastView extends StatelessWidget {
 
   Widget _buildMonthForecastList(
       BuildContext context, int index, ForecastViewModel model) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-            "${model.monthForecast?[index].date.day}-${model.monthForecast?[index].date.month}"),
-        Expanded(
-            child: ListView.builder(
-          itemBuilder: (context, index) => _buildMonthForecastAllergenList(
-              context, index, model.monthForecast?[index]),
-          itemCount: model.monthForecast?[index].allergenTypeStrength.length,
-          scrollDirection: Axis.horizontal,
-        )),
-      ],
+    int dangerThatDay = model.monthForecast![index].allergenTypeStrength.values
+        .toList()
+        .reduce((a, b) => a + b);
+
+    List<String> allergensStrong = model
+        .monthForecast![index].allergenTypeStrength.entries
+        .where((e) => e.value == 2)
+        .map((e) => e.key)
+        .toList();
+    List<String> allergensMedium = model
+        .monthForecast![index].allergenTypeStrength.entries
+        .where((e) => e.value == 1)
+        .map((e) => e.key)
+        .toList();
+
+    return Card(
+      child: ListTile(
+        leading: getAllergenIcon(dangerThatDay, 56.0),
+        title: Text(
+            "${DateFormat('MMM dd').format(model.monthForecast![index].date)}, ${allergensStrong}"),
+        subtitle: Text("$allergensMedium"),
+      ),
     );
-  }
-
-  Widget _buildMonthForecastAllergenList(
-      BuildContext context, int index, ForecastItem? f) {
-    String? key = f?.allergenTypeStrength.keys.toList()[index];
-
-    if (f!.allergenTypeStrength[key]! == 0) {
-      return Container();
-    } else {
-      return Text("$key: ${f.allergenTypeStrength[key]}");
-    }
   }
 
   Widget _buildWeekForecastList(
