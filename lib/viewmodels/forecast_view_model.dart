@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:frontend/locator.dart';
 import 'package:frontend/models/forecast_model.dart';
 import 'package:frontend/models/geo_model.dart';
@@ -18,6 +19,8 @@ class ForecastViewModel extends BaseModel {
   List<ForecastItem>? monthForecast;
 
   DateTime today = DateTime.now();
+
+  String? selectedRegion = 'Region 2';
 
   //view vars
   int _selectedIndex = 0;
@@ -54,6 +57,7 @@ class ForecastViewModel extends BaseModel {
   Future<void> _getTodayForecast() async {
     todaysForecast =
         await _forecastService.getForecastForDate(today, position!);
+    selectedRegion = 'Region ' + todaysForecast!.region.toString();
   }
 
   Future<void> _getWeekForecast() async {
@@ -81,5 +85,32 @@ class ForecastViewModel extends BaseModel {
   Future<void> _updatePosition() async {
     await _geoService.getCurrentPosition();
     position = _geoService.getLastPosition();
+  }
+
+  List<DropdownMenuItem<String>> getMapRegionItems() {
+    return ['Region 1', 'Region 2', 'Region 3', 'Region 4'].map(
+      (val) {
+        return DropdownMenuItem<String>(child: Text(val), value: val);
+      },
+    ).toList();
+  }
+
+  void setMapRegion(String? value) {
+    selectedRegion = value;
+    notifyListeners();
+  }
+
+  Widget getRegionImage() {
+    switch (selectedRegion) {
+      case 'Region 2':
+        return Image.asset('assets/images/polskaAlergia2.png');
+      case 'Region 3':
+        return Image.asset('assets/images/polskaAlergia3.png');
+      case 'Region 4':
+        return Image.asset('assets/images/polskaAlergia4.png');
+      case 'Region 1':
+      default:
+        return Image.asset('assets/images/polskaAlergia1.png');
+    }
   }
 }

@@ -12,10 +12,12 @@ class ForecastView extends StatelessWidget {
   List<Widget> getAllergenChipList(ForecastItem fi) {
     return fi.allergenTypeStrength.entries
         .where((element) => element.value > 0)
-        .map((e) => Chip(
-              backgroundColor: getAllergenChipColor(e.value),
-              label: Text(e.key),
-            ))
+        .map(
+          (e) => Chip(
+            backgroundColor: getAllergenChipColor(e.value),
+            label: Text(e.key),
+          ),
+        )
         .toList();
   }
 
@@ -70,7 +72,7 @@ class ForecastView extends StatelessWidget {
         }
       case 3:
         {
-          return const Text("Here will be map");
+          return buildMap(context);
         }
       default:
         {
@@ -122,6 +124,60 @@ class ForecastView extends StatelessWidget {
             model.setIndex(i),
           },
         ),
+      ),
+    );
+  }
+
+  Widget buildMap(BuildContext context) {
+    return ViewModelBuilder<ForecastViewModel>.reactive(
+      viewModelBuilder: () => ForecastViewModel(),
+      builder: (context, model, child) => Scaffold(
+        body: model.busy
+            ? const BusyIndicator()
+            : Padding(
+                padding: const EdgeInsets.all(10),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Stack(
+                        children: [
+                          Image.asset('assets/images/polskaAlergia0.png'),
+                          model.getRegionImage(),
+                        ],
+                      ),
+                      //DropdownMenuItem(child: child)
+                      DropdownButton(
+                        items: model.getMapRegionItems(),
+                        onChanged: (String? val) => model.setMapRegion(val),
+                        value: model.selectedRegion,
+                      ),
+                      Wrap(
+                        //mainAxisAlignment: MainAxisAlignment.center,
+                        children:
+                            getAllergenChipList(model.todaysForecast!).map(
+                          (e) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4),
+                              child: e,
+                            );
+                          },
+                        ).toList(),
+                      )
+                      // ListView.builder(
+                      //   itemBuilder: (ctx, index) {
+                      //     return Text('asdasd $index');
+                      //   },
+                      //   itemCount: 20,
+                      //   shrinkWrap: true,
+                      //   physics: const NeverScrollableScrollPhysics(),
+                      // )
+                    ],
+                  ),
+                ),
+              ),
       ),
     );
   }
@@ -184,12 +240,13 @@ class ForecastView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Expanded(
-                        child: ListView.builder(
-                      itemBuilder: (context, index) =>
-                          _buildWeekForecastList(context, index, model),
-                      itemCount: model.weekForecast?.length,
-                      scrollDirection: Axis.horizontal,
-                    )),
+                      child: ListView.builder(
+                        itemBuilder: (context, index) =>
+                            _buildWeekForecastList(context, index, model),
+                        itemCount: model.weekForecast?.length,
+                        scrollDirection: Axis.horizontal,
+                      ),
+                    ),
                     smallSpacedDivider,
                     TextButton(
                       onPressed: () => {
@@ -213,7 +270,9 @@ class ForecastView extends StatelessWidget {
   Widget buildToday(BuildContext context) {
     return ViewModelBuilder<ForecastViewModel>.reactive(
       viewModelBuilder: () => ForecastViewModel(),
-      onModelReady: (viewmodel) => {viewmodel.getForecast()},
+      onModelReady: (viewmodel) => {
+        viewmodel.getForecast(),
+      },
       builder: (context, model, child) => Scaffold(
         body: model.busy
             ? const BusyIndicator()
@@ -225,28 +284,31 @@ class ForecastView extends StatelessWidget {
                   children: [
                     Text(
                         "(location: (${model.position?.latitude} ${model.position?.longitude}), region: ${model.todaysForecast?.region})"),
+                    spacedDivider,
                     Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                DateFormat('EEEE').format(model.today),
-                              ),
-                              Text(
-                                DateFormat('yyyy MMM dd').format(model.today),
-                              ),
-                              Text(
-                                  " ${model.todaysForecast!.allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s today:"),
-                            ],
+                          Text(
+                            DateFormat('EEEE').format(model.today),
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Text(
+                            DateFormat('yyyy MMM dd').format(model.today),
+                          ),
+                          Text(
+                              " ${model.todaysForecast!.allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s today:"),
+                          Wrap(
+                            //mainAxisAlignment: MainAxisAlignment.center,
                             children:
-                                getAllergenChipList(model.todaysForecast!),
-                          )
+                                getAllergenChipList(model.todaysForecast!).map(
+                              (e) {
+                                return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
+                                    child: e);
+                              },
+                            ).toList(),
+                          ),
                         ],
                       ),
                     ),
@@ -264,7 +326,8 @@ class ForecastView extends StatelessWidget {
                       child: const Text("refresh forecast (+180days)"),
                     )
                   ],
-                )),
+                ),
+              ),
       ),
     );
   }
@@ -299,7 +362,8 @@ class ForecastView extends StatelessWidget {
   Widget _buildWeekForecastList(
       BuildContext context, int i, ForecastViewModel model) {
     return Padding(
-        padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(15),
+      child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -313,7 +377,9 @@ class ForecastView extends StatelessWidget {
                 " ${model.weekForecast![i].allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s that day:"),
             ...getAllergenChipList(model.weekForecast![i])
           ],
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildWeekForecastAllergenList(
