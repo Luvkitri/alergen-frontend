@@ -12,7 +12,9 @@ class AllergiesService {
     if (allergies.isNotEmpty) {
       return allergies;
     }
-    var resp = await http.get(Uri.parse(urlS + '/allergy'));
+    var resp = await http.get(
+      Uri.parse(urlS + '/allergy'),
+    );
     if (resp.statusCode == 200) {
       dynamic all = jsonDecode(resp.body);
       for (Map<String, dynamic> a in all) {
@@ -25,7 +27,9 @@ class AllergiesService {
   }
 
   Future getUserAllergiesList(String userid) async {
-    var resp = await http.get(Uri.parse(urlS + '/user_allergy/' + userid));
+    var resp = await http.get(
+      Uri.parse(urlS + '/user_allergy/' + userid),
+    );
     if (resp.statusCode == 200) {
       dynamic all = jsonDecode(resp.body);
       userAllergies = [];
@@ -40,11 +44,13 @@ class AllergiesService {
   }
 
   Future saveUsersAllergies(String id, List<int> allergiesSelected) async {
-    var resp = await http.post(Uri.parse(urlS + '/user_allergy/' + id),
-        body: jsonEncode({'allergy_id': allergiesSelected}),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
+    var resp = await http.post(
+      Uri.parse(urlS + '/user_allergy/' + id),
+      body: jsonEncode({'allergy_id': allergiesSelected}),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
     if (resp.statusCode == 201) {
       return true;
     } else {
@@ -53,15 +59,34 @@ class AllergiesService {
   }
 
   Future deleteUsersAllergies(String id, List<int> allergiesSelected) async {
-    var resp = await http.delete(Uri.parse(urlS + '/user_allergy/' + id),
-        body: jsonEncode({'allergy_id': allergiesSelected}),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
+    var resp = await http.delete(
+      Uri.parse(urlS + '/user_allergy/' + id),
+      body: jsonEncode({'allergy_id': allergiesSelected}),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
     if (resp.statusCode == 204) {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future getCrossAllergiesFromIdList(List<int> userAllergies) async {
+    var resp = await http.get(
+      Uri.parse(urlS + '/user_allergy/'),
+    );
+    if (resp.statusCode == 200) {
+      dynamic all = jsonDecode(resp.body);
+      // userAllergies = [];
+      // for (Map<String, dynamic> a in all) {
+      //   userAllergies.add(Allergy.fromData(a));
+      //   userAllergies.sort((a, b) => a.id.compareTo(b.id));
+      // }
+      return userAllergies;
+    } else {
+      return null;
     }
   }
 }

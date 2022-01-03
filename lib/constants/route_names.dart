@@ -8,3 +8,5 @@ const String startUpViewRoute = "startUpViewRoute";
 const String productRoute = "ProductView";
 const String allergiesViewRoute = "AllergiesViewRoute";
 const String addAllergiesViewRoute = "AddAllergiesViewRoute";
+const String crossAllergiesViewRoute = "crossAllergiesViewRoute";
+
