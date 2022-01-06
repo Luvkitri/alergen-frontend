@@ -28,7 +28,7 @@ class AllergiesService {
 
   Future getUserAllergiesList(String userid) async {
     var resp = await http.get(
-      Uri.parse(urlS + '/users/' + userid + '/allergies'),
+      Uri.parse(urlS + '/users/' + userid + '/allergies/'),
     );
     if (resp.statusCode == 200) {
       dynamic all = jsonDecode(resp.body);
@@ -45,7 +45,7 @@ class AllergiesService {
 
   Future saveUsersAllergies(String id, List<int> allergiesSelected) async {
     var resp = await http.post(
-      Uri.parse(urlS + '/users/' + id + '/allergies'),
+      Uri.parse(urlS + '/users/' + id + '/allergies/'),
       body: jsonEncode(
         {
           'allergy_ids': allergiesSelected,
@@ -66,7 +66,7 @@ class AllergiesService {
     var resp = await http.delete(
       Uri.http(
         urlSh,
-        '/api/v1/users/$id/allergies',
+        '/api/v1/users/$id/allergies/',
         {
           'allergy_ids': allergiesSelected.map((e) => e.toString()).toList(),
         },
@@ -75,7 +75,7 @@ class AllergiesService {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    if (resp.statusCode == 204) {
+    if (resp.statusCode == 200 || resp.statusCode == 204) {
       return true;
     } else {
       return false;
@@ -85,7 +85,7 @@ class AllergiesService {
   Future getCrossAllergiesFromIdList(List<int> userAllergies) async {
     Uri temp = Uri.http(
       urlSh,
-      'cross-allergies',
+      'api/v1/cross-allergies',
       {
         'allergy_ids': userAllergies.map((e) => e.toString()).toList(),
       },
@@ -93,12 +93,7 @@ class AllergiesService {
     var resp = await http.get(temp);
     if (resp.statusCode == 200) {
       dynamic all = jsonDecode(resp.body);
-      // userAllergies = [];
-      // for (Map<String, dynamic> a in all) {
-      //   userAllergies.add(Allergy.fromData(a));
-      //   userAllergies.sort((a, b) => a.id.compareTo(b.id));
-      // }
-      return [];
+      return all;
     } else {
       return null;
     }

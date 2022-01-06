@@ -15,27 +15,24 @@ class CrossAllergiesViewModel extends BaseModel {
 
   List<int> selectedids = [];
   List<bool> selectedCheckbox = List.filled(100, false);
-  void getCrossAllergiesList(List<int> userAllergies) async{
+  void getCrossAllergiesList(List<int> userAllergies) async {
     this.userAllergies = userAllergies;
     if (userAllergies.isEmpty) {
       _navigationService.popWithResult([]);
       return;
     }
-    var resp = _allergiesService.getCrossAllergiesFromIdList(userAllergies);
-    //TODO: poprawny resp
-    crossAllergies.addAll(
-      {
-        3: [
-          getAllergyFromId(1),
-          getAllergyFromId(2),
-          getAllergyFromId(10),
-        ],
-        10: [
-          getAllergyFromId(11),
-          getAllergyFromId(14),
-        ]
-      },
-    );
+    List<dynamic>? resp =
+        await _allergiesService.getCrossAllergiesFromIdList(userAllergies);
+    resp?.forEach((element) {
+      int id = element['allergy_id'];
+      List<int> cross = element['cross_allergies'].cast<int>() as List<int>;
+      crossAllergies.addAll(
+        {
+          id: cross.map((int e) => getAllergyFromId(e)).toList(),
+        },
+      );
+    });
+
     notifyListeners();
   }
 
@@ -64,7 +61,7 @@ class CrossAllergiesViewModel extends BaseModel {
     _navigationService.popWithResult(out.toSet().toList());
   }
 
-  void showHelp() async{
+  void showHelp() async {
     await _dialogService.showDialog(
       title: 'Cross-Allergies',
       description:

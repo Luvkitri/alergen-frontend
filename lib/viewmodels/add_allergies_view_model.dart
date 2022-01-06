@@ -52,10 +52,13 @@ class AddAllergiesViewModel extends BaseModel {
           [];
       allergiesSelectedId.addAll(respAll);
     }
-    var resp2 = await _allergiesService.deleteUsersAllergies(
-        getUser()!.id, userAllergies);
+    var resp2 = true;
+    if (userAllergies.isNotEmpty) {
+      resp2 = await _allergiesService.deleteUsersAllergies(
+          getUser()!.id, userAllergies);
+    }
     var resp = await _allergiesService.saveUsersAllergies(
-        getUser()!.id, allergiesSelectedId);
+        getUser()!.id, allergiesSelectedId.toSet().toList());
     setBusy(false);
     if (!resp || !resp2) {
       await _dialogService.showDialog(
