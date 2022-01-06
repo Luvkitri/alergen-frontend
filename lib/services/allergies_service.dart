@@ -4,7 +4,7 @@ import 'dart:convert';
 
 class AllergiesService {
   String urlS = 'http://10.0.2.2:8000/api/v1';
-
+  String urlSh = '10.0.2.2:8000';
   List<Allergy> allergies = [];
   List<Allergy> userAllergies = [];
 
@@ -13,7 +13,7 @@ class AllergiesService {
       return allergies;
     }
     var resp = await http.get(
-      Uri.parse(urlS + '/allergy'),
+      Uri.parse(urlS + '/allergies'),
     );
     if (resp.statusCode == 200) {
       dynamic all = jsonDecode(resp.body);
@@ -28,7 +28,7 @@ class AllergiesService {
 
   Future getUserAllergiesList(String userid) async {
     var resp = await http.get(
-      Uri.parse(urlS + '/user_allergy/' + userid),
+      Uri.parse(urlS + '/users/' + userid + '/allergies'),
     );
     if (resp.statusCode == 200) {
       dynamic all = jsonDecode(resp.body);
@@ -45,8 +45,12 @@ class AllergiesService {
 
   Future saveUsersAllergies(String id, List<int> allergiesSelected) async {
     var resp = await http.post(
-      Uri.parse(urlS + '/user_allergy/' + id),
-      body: jsonEncode({'allergy_id': allergiesSelected}),
+      Uri.parse(urlS + '/users/' + id + '/allergies'),
+      body: jsonEncode(
+        {
+          'allergy_ids': allergiesSelected,
+        },
+      ),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -60,8 +64,13 @@ class AllergiesService {
 
   Future deleteUsersAllergies(String id, List<int> allergiesSelected) async {
     var resp = await http.delete(
-      Uri.parse(urlS + '/user_allergy/' + id),
-      body: jsonEncode({'allergy_id': allergiesSelected}),
+      Uri.http(
+        urlSh,
+        '/api/v1/users/$id/allergies',
+        {
+          'allergy_ids': allergiesSelected.map((e) => e.toString()).toList(),
+        },
+      ),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -74,9 +83,14 @@ class AllergiesService {
   }
 
   Future getCrossAllergiesFromIdList(List<int> userAllergies) async {
-    var resp = await http.get(
-      Uri.parse(urlS + '/user_allergy/'),
+    Uri temp = Uri.http(
+      urlSh,
+      'cross-allergies',
+      {
+        'allergy_ids': userAllergies.map((e) => e.toString()).toList(),
+      },
     );
+    var resp = await http.get(temp);
     if (resp.statusCode == 200) {
       dynamic all = jsonDecode(resp.body);
       // userAllergies = [];
@@ -84,7 +98,7 @@ class AllergiesService {
       //   userAllergies.add(Allergy.fromData(a));
       //   userAllergies.sort((a, b) => a.id.compareTo(b.id));
       // }
-      return userAllergies;
+      return [];
     } else {
       return null;
     }

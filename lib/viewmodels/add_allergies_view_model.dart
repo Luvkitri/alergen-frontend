@@ -45,8 +45,13 @@ class AddAllergiesViewModel extends BaseModel {
     List<int> userAllergies = List.from(
       _allergiesService.userAllergies.map((a) => a.id),
     );
-    List<int> respAll = await _navigationService.navigateTo(crossAllergiesViewRoute,arguments: userAllergies) ?? [];
-    allergiesSelectedId.addAll(respAll);
+    if (allergiesSelectedId.isNotEmpty) {
+      List<int> respAll = await _navigationService.navigateTo(
+              crossAllergiesViewRoute,
+              arguments: allergiesSelectedId) as List<int>? ??
+          [];
+      allergiesSelectedId.addAll(respAll);
+    }
     var resp2 = await _allergiesService.deleteUsersAllergies(
         getUser()!.id, userAllergies);
     var resp = await _allergiesService.saveUsersAllergies(

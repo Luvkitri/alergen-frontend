@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/allergy_model.dart';
 import 'package:frontend/ui/shared/shared_styles.dart';
 import 'package:frontend/ui/shared/ui_helpers.dart';
-import 'package:frontend/viewmodels/cross_allerfies_view_model.dart';
+import 'package:frontend/viewmodels/cross_allergies_view_model.dart';
 import 'package:stacked/stacked.dart';
 
 class CrossAllergiesView extends StatelessWidget {
@@ -41,7 +41,7 @@ class CrossAllergiesView extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.separated(
                     separatorBuilder: (ctx, index) {
-                      return smallSpacedDivider;
+                      return spacedDivider;
                     },
                     itemCount: model.crossAllergies.length,
                     itemBuilder: (ctx, index) =>
@@ -69,8 +69,9 @@ class CrossAllergiesView extends StatelessWidget {
       children: [
         Text(
           root.name,
-          style: titleStyleMedium,
+          style: titleStyleMediumB,
         ),
+        const Text('This allergy may cause:'),
         ...rows,
       ],
     );
@@ -81,7 +82,12 @@ class CrossAllergiesView extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Text(allergy.name),
+          child: Text(
+            allergy.name,
+            style: TextStyle(
+              fontSize: 21,
+            ),
+          ),
         ),
         Checkbox(
           value: model.selectedCheckbox[allergy.id],

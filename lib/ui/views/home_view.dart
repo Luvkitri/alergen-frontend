@@ -39,8 +39,9 @@ class HomeView extends StatelessWidget {
             ? const BusyIndicator()
             : Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Center(
+                child: SingleChildScrollView(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       menuButton(model.navigateToAllergies, 'Allergies'),
                       verticalSpaceSmall,
