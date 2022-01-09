@@ -1,3 +1,4 @@
+import 'package:frontend/constants/route_names.dart';
 import 'package:frontend/models/allergy_model.dart';
 import 'package:frontend/services/allergies_service.dart';
 import 'package:frontend/services/dialog_service.dart';
@@ -41,12 +42,23 @@ class AddAllergiesViewModel extends BaseModel {
         allergiesSelectedId.add(allergies[i].id);
       }
     }
-    List<int> userAllergies =
-        List.from(_allergiesService.userAllergies.map((a) => a.id));
-    var resp2 = await _allergiesService.deleteUsersAllergies(
-        getUser()!.id, userAllergies);
+    List<int> userAllergies = List.from(
+      _allergiesService.userAllergies.map((a) => a.id),
+    );
+    if (allergiesSelectedId.isNotEmpty) {
+      List<int> respAll = await _navigationService.navigateTo(
+              crossAllergiesViewRoute,
+              arguments: allergiesSelectedId) as List<int>? ??
+          [];
+      allergiesSelectedId.addAll(respAll);
+    }
+    var resp2 = true;
+    if (userAllergies.isNotEmpty) {
+      resp2 = await _allergiesService.deleteUsersAllergies(
+          getUser()!.id, userAllergies);
+    }
     var resp = await _allergiesService.saveUsersAllergies(
-        getUser()!.id, allergiesSelectedId);
+        getUser()!.id, allergiesSelectedId.toSet().toList());
     setBusy(false);
     if (!resp || !resp2) {
       await _dialogService.showDialog(

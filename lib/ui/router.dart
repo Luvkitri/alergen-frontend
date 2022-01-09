@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/constants/route_names.dart';
 import 'package:frontend/ui/views/add_allergies_view.dart';
 import 'package:frontend/ui/views/allergies_view.dart';
+import 'package:frontend/ui/views/cross_allergies_view.dart';
 import 'package:frontend/ui/views/example_view.dart';
 import 'package:frontend/ui/views/forecast_view.dart';
 import 'package:frontend/ui/views/home_view.dart';
@@ -38,7 +39,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         const StartUpView(),
       );
     case forecastRoute:
-      return _getPageRoute(settings.name!, const ForecastView());
+      return _getPageRoute(
+        settings.name!,
+        const ForecastView(),
+      );
     case allergiesViewRoute:
       return _getPageRoute(
         settings.name!,
@@ -49,9 +53,18 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         settings.name!,
         const AddAllergiesView(),
       );
+    case crossAllergiesViewRoute:
+      List<int> ids = settings.arguments as List<int>? ?? [];
+      return _getPageRoute(
+        settings.name!,
+        CrossAllergiesView(selectedAllergies: ids),
+      );
     case productRoute:
-      return _getPageRoute(settings.name!, const ProductView(),
-          arguments: settings.arguments);
+      return _getPageRoute(
+        settings.name!,
+        const ProductView(),
+        arguments: settings.arguments,
+      );
     default:
       return MaterialPageRoute(
           builder: (_) => Scaffold(
