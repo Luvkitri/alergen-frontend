@@ -51,20 +51,18 @@ class UserInfoFromViewModel extends BaseModel {
   }
 
   Future deleteUser() async {
-    if (_authService.user == null) {
-      await _dialogService.showDialog(title: 'Error occured');
-      return;
-    }
     var confirmed = await _dialogService.showConfirmationDialog(
         title: 'Delete account?',
         description: 'Are you sure to delete your account?');
     if (!confirmed.confirmed) {
       return;
     }
-    var resp = await _authService.deleteUser();
-    if (resp == false) {
-      await _dialogService.showDialog(title: 'Error occured');
-      return;
+    if (_authService.user != null) {
+      var resp = await _authService.deleteUser();
+      if (resp == false) {
+        await _dialogService.showDialog(title: 'Error occured, resp == false');
+        return;
+      }
     }
     const storage = FlutterSecureStorage();
     await storage.delete(key: "USER_ID");
