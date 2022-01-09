@@ -131,6 +131,8 @@ class ForecastView extends StatelessWidget {
   Widget buildMap(BuildContext context) {
     return ViewModelBuilder<ForecastViewModel>.reactive(
       viewModelBuilder: () => ForecastViewModel(),
+      onModelReady: (model) =>
+          {if (model.todaysForecast == null) model.getForecast()},
       builder: (context, model, child) => Scaffold(
         body: model.busy
             ? const BusyIndicator()
