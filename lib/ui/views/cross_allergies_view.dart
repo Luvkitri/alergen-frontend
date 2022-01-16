@@ -84,7 +84,7 @@ class CrossAllergiesView extends StatelessWidget {
         Expanded(
           child: Text(
             allergy.name,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 21,
             ),
           ),

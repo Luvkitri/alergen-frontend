@@ -28,6 +28,10 @@ class HomeView extends StatelessWidget {
               icon: const Icon(Icons.account_box),
               onPressed: model.navigateToUserInfoForm,
             ),
+            IconButton(
+              icon: const Icon(Icons.notification_add),
+              onPressed: model.showNotification,
+            ),
           ],
         ),
         // floatingActionButton: FloatingActionButton(
