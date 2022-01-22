@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 class ForecastService {
   static String baseUrl = '10.0.2.2:8001';
+  List<ForecastItem> forecastForRange = [];
 
   Future<ForecastItem?> getForecastForDate(
       DateTime date, PositionItem location) async {
@@ -41,6 +42,7 @@ class ForecastService {
         result.add(forecast);
       }
     }
+    forecastForRange = result;
     return result;
   }
 }

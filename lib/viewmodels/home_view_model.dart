@@ -1,11 +1,13 @@
 import 'package:frontend/constants/route_names.dart';
 import 'package:frontend/locator.dart';
 import 'package:frontend/services/navigation_service.dart';
+import 'package:frontend/services/notifications_service.dart';
 
 import 'base_model.dart';
 
 class HomeViewModel extends BaseModel {
   final NavigationService _navigationService = locator<NavigationService>();
+  final NotificationService _notificationService = locator<NotificationService>();
   List<int> someList = [];
 
   Future fetchSomeList() async {
@@ -30,6 +32,7 @@ class HomeViewModel extends BaseModel {
 
   void navigateToUserInfoForm() async {
     await _navigationService.navigateTo(userInfoFormViewRoute);
+
   }
 
   void navigateToForecast() async {
@@ -38,5 +41,9 @@ class HomeViewModel extends BaseModel {
 
   void navigateToAllergies() async {
     await _navigationService.navigateTo(allergiesViewRoute);
+  }
+
+  void showNotification() async {
+    await _notificationService.showNotification();
   }
 }
