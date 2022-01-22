@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/allergy_model.dart';
 import 'package:frontend/ui/shared/shared_styles.dart';
-import 'package:frontend/ui/shared/ui_helpers.dart';
 import 'package:frontend/viewmodels/cross_allergies_view_model.dart';
 import 'package:stacked/stacked.dart';
 
@@ -39,10 +38,10 @@ class CrossAllergiesView extends StatelessWidget {
               ? const CircularProgressIndicator()
               : Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: ListView.separated(
-                    separatorBuilder: (ctx, index) {
-                      return spacedDivider;
-                    },
+                  child: ListView.builder(
+                    // separatorBuilder: (ctx, index) {
+                    //   return spacedDivider;
+                    // },
                     itemCount: model.crossAllergies.length,
                     itemBuilder: (ctx, index) =>
                         _crossAllergyBatchBuilder(index, model),
@@ -67,35 +66,36 @@ class CrossAllergiesView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          root.name,
-          style: titleStyleMediumB,
+        ExpansionTile(
+          children: rows,
+          title: Text(
+            root.name,
+            style: titleStyleMedium,
+          ),
         ),
-        const Text('This allergy may cause:'),
-        ...rows,
       ],
     );
   }
 
   Widget _crossAllergyItemBuilder(
       CrossAllergiesViewModel model, Allergy allergy) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            allergy.name,
-            style: const TextStyle(
-              fontSize: 21,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 38.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              allergy.name,
             ),
           ),
-        ),
-        Checkbox(
-          value: model.selectedCheckbox[allergy.id],
-          onChanged: (value) {
-            model.selectCrossAllergy(value, allergy.id);
-          },
-        )
-      ],
+          Checkbox(
+            value: model.selectedCheckbox[allergy.id],
+            onChanged: (value) {
+              model.selectCrossAllergy(value, allergy.id);
+            },
+          )
+        ],
+      ),
     );
   }
 }

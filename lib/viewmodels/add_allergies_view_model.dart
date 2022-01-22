@@ -98,13 +98,12 @@ class AddAllergiesViewModel extends BaseModel {
   }
 
   void filterAllergies(String input) {
-    print(input);
     allergies = [];
-    allAllergies.forEach((element) {
+    for (var element in allAllergies) {
       if (element.name.toLowerCase().contains(input)) {
         allergies.add(element);
       }
-    });
+    }
     if(input == ''){
       allergies = allAllergies;
     }
