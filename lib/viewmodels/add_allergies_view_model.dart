@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:frontend/constants/route_names.dart';
 import 'package:frontend/models/allergy_model.dart';
 import 'package:frontend/services/allergies_service.dart';
@@ -13,20 +14,40 @@ class AddAllergiesViewModel extends BaseModel {
   final NavigationService _navigationService = locator<NavigationService>();
 
   List<Allergy> allergies = [];
-
+  List<Allergy> allAllergies = [];
   List<bool> allergiesSelected = [];
+
+  var filterController = TextEditingController();
 
   void getAllergiesList() async {
     setBusy(true);
     allergies = await _allergiesService.getAllergiesList();
-    allergiesSelected = List.filled(allergies.length, false);
+    final result = allergies.fold<Allergy>(allergies.first, (max, element) {
+          if (max.id < element.id) {
+            return element;
+          }
+          return max;
+        }).id +
+        1;
+    allergiesSelected = List.filled(result, false);
     List userAllergies = _allergiesService.userAllergies;
     for (int i = 0; i < allergies.length; i++) {
       if (userAllergies.contains(allergies[i])) {
-        allergiesSelected[i] = true;
-      } else {}
+        allergiesSelected[allergies[i].id] = true;
+      }
     }
+    sortAllergiesBySelection();
+    allAllergies = allergies;
     setBusy(false);
+  }
+
+  void sortAllergiesBySelection(){
+    allergies.sort((a, b) {
+      if(allergiesSelected[b.id]) {
+        return 1;
+      }
+      return -1;
+    });
   }
 
   void addAllergyToList(int index, bool? i) {
@@ -39,7 +60,7 @@ class AddAllergiesViewModel extends BaseModel {
     List<int> allergiesSelectedId = [];
     for (int i = 0; i < allergiesSelected.length; i++) {
       if (allergiesSelected[i]) {
-        allergiesSelectedId.add(allergies[i].id);
+        allergiesSelectedId.add(i);
       }
     }
     List<int> userAllergies = List.from(
@@ -67,5 +88,27 @@ class AddAllergiesViewModel extends BaseModel {
     } else {
       _navigationService.pop();
     }
+  }
+
+  void clearSearch() {
+    filterController.clear();
+    allergies = allAllergies;
+    sortAllergiesBySelection();
+    notifyListeners();
+  }
+
+  void filterAllergies(String input) {
+    print(input);
+    allergies = [];
+    allAllergies.forEach((element) {
+      if (element.name.toLowerCase().contains(input)) {
+        allergies.add(element);
+      }
+    });
+    if(input == ''){
+      allergies = allAllergies;
+    }
+    sortAllergiesBySelection();
+    notifyListeners();
   }
 }
