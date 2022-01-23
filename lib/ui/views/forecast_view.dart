@@ -10,15 +10,21 @@ import 'package:intl/intl.dart';
 class ForecastView extends StatelessWidget {
   const ForecastView({Key? key}) : super(key: key);
 
-  List<Widget> getAllergenChipList(ForecastItem fi) {
+  List<Widget> getAllergenChipList(ForecastItem fi, {bool compact = false}) {
+    VisualDensity density = compact
+        ? const VisualDensity(
+            horizontal: VisualDensity.minimumDensity,
+            vertical: VisualDensity.minimumDensity)
+        : VisualDensity.standard;
+
     return fi.allergenTypeStrength.entries
         .where((element) => element.value > 0)
-        .map(
-          (e) => Chip(
-            backgroundColor: getAllergenChipColor(e.value),
-            label: Text(e.key),
-          ),
-        )
+        .map((e) => Chip(
+              backgroundColor: getAllergenChipColor(e.value),
+              label: Text(e.key),
+              // padding: EdgeInsets.all(padding),
+              visualDensity: density,
+            ))
         .toList();
   }
 
@@ -202,7 +208,7 @@ class ForecastView extends StatelessWidget {
         body: model.busy
             ? const BusyIndicator()
             : Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(5),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -311,23 +317,31 @@ class ForecastView extends StatelessWidget {
         .toList()
         .reduce((a, b) => a + b);
 
-    List<String> allergensStrong = model
+    // List<String> allergensStrong = model
+    //     .monthForecast![index].allergenTypeStrength.entries
+    //     .where((e) => e.value == 2)
+    //     .map((e) => e.key)
+    //     .toList();
+    // List<String> allergensMedium = model
+    //     .monthForecast![index].allergenTypeStrength.entries
+    //     .where((e) => e.value == 1)
+    //     .map((e) => e.key)
+    //     .toList();
+
+    List<String> allergensAll = model
         .monthForecast![index].allergenTypeStrength.entries
-        .where((e) => e.value == 2)
-        .map((e) => e.key)
-        .toList();
-    List<String> allergensMedium = model
-        .monthForecast![index].allergenTypeStrength.entries
-        .where((e) => e.value == 1)
         .map((e) => e.key)
         .toList();
 
     return Card(
       child: ListTile(
         leading: getAllergenIcon(dangerThatDay, 56.0),
-        title: Text(
-            "${DateFormat('MMM dd').format(model.monthForecast![index].date)}, $allergensStrong"),
-        subtitle: Text("$allergensMedium"),
+        title:
+            Text(DateFormat('MMM dd').format(model.monthForecast![index].date)),
+        subtitle: Wrap(
+          children:
+              getAllergenChipList(model.monthForecast![index], compact: true),
+        ),
       ),
     );
   }
