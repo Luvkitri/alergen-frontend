@@ -55,7 +55,10 @@ class ProductView extends StatelessWidget {
                               context, index, model, product),
                           itemCount: product.allergens.length,
                         ))
-                      : const Text("Haven't found any allergens"),
+                      : const Padding(
+                          padding: EdgeInsets.fromLTRB(20, 5, 15, 0),
+                          child: Text("Haven't found any allergens"),
+                        ),
                   TextButton(
                     child: Text(
                       model.alreadySaved

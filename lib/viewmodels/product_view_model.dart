@@ -13,11 +13,11 @@ class ProductViewModel extends BaseModel {
   late Product product;
 
   Future<void> loadUsersProducts() async {
-    productService.getUserProducts();
+    await productService.getUserProducts();
   }
 
   Future<void> saveUserProduct(String code) async {
-    productService.saveUserProduct(code);
+    await productService.saveUserProduct(code);
     alreadySaved = true;
     notifyListeners();
   }

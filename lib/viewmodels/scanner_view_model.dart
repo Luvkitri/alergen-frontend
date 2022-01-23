@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:frontend/constants/route_names.dart';
 import 'package:frontend/models/product_model.dart';
@@ -16,6 +18,13 @@ class ScannerViewModel extends BaseModel {
 
   final OpenfoodfactsService _openfoodfactsService =
       locator<OpenfoodfactsService>();
+
+  Future<void> saveUserProduct(String code) async {
+    if (!productService.usersSavedProducts.contains(code)) {
+      await productService.saveUserProduct(code);
+      notifyListeners();
+    }
+  }
 
   // example codes for quick tests
   static List<String> sampleCodes = [
@@ -40,7 +49,26 @@ class ScannerViewModel extends BaseModel {
     return ScannerResults.scannedProducts;
   }
 
-  void removeScannedProduct(Product p) {
+  Future<void> fetchProductData() async {
+    setBusy(true);
+    var userProducts = await productService.getUserProducts();
+    for (var code in userProducts) {
+      Product p = await _openfoodfactsService.findProduct(code);
+      if ((ScannerResults.scannedProducts
+              .firstWhereOrNull((element) => element.code == code)) ==
+          null) {
+        ScannerResults.scannedProducts.insert(0, p);
+      }
+    }
+    setBusy(false);
+    notifyListeners();
+  }
+
+  void removeScannedProduct(Product p) async {
+    if (productService.usersSavedProducts.contains(p.code)) {
+      await productService.deleteUserProduct(p.code);
+    }
+
     ScannerResults.scannedProducts.remove(p);
     sampleCodes.add(p.code);
     notifyListeners();

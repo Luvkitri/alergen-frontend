@@ -33,7 +33,7 @@ class ProductService {
     debugPrint("saveUserProduct: $code");
     debugPrint(response.body);
 
-    getUserProducts();
+    await getUserProducts();
   }
 
   Future<List<String>> getUserProducts() async {
@@ -42,17 +42,38 @@ class ProductService {
     }
 
     Uri uri =
-        Uri.http(baseUrl, '/api/v1/users/${_authService.user!.id}/products');
+        Uri.http(baseUrl, '/api/v1/users/${_authService.user!.id}/products/');
     http.Response response = await http
         .get(uri, headers: {'Content-Type': 'application/json; charset=UTF-8'});
 
     debugPrint("getUserProducts");
     debugPrint(response.body);
 
+    usersSavedProducts = [];
+
     for (var productObj in jsonDecode(response.body)) {
       usersSavedProducts.add(productObj["name"]);
     }
 
     return usersSavedProducts;
+  }
+
+  Future<void> deleteUserProduct(String code) async {
+    if (_authService.user == null) {
+      return;
+    }
+
+    Uri uri = Uri.http(
+      baseUrl,
+      '/api/v1/users/${_authService.user!.id}/products/',
+      {
+        'product_ids': [code],
+      },
+    );
+
+    await http.delete(uri,
+        headers: {'Content-Type': 'application/json; charset=UTF-8'});
+
+    await getUserProducts();
   }
 }

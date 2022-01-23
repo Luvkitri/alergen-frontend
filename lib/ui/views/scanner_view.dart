@@ -12,7 +12,7 @@ class ScannerView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ScannerViewModel>.reactive(
       viewModelBuilder: () => ScannerViewModel(),
-      onModelReady: (model) => {model.productService.getUserProducts()},
+      onModelReady: (model) => {model.fetchProductData()},
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: const Text("Product scanner"),
@@ -46,32 +46,39 @@ class ScannerView extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: InkWell(
           child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                AspectRatio(
-                    aspectRatio: 1.0,
-                    child: Image.network(p.imageUrl ?? Product.missingPhotoUrl,
-                        fit: BoxFit.cover)),
-                Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Text(
-                            '${model.getScannedProducts()[index].name} (${model.getScannedProducts()[index].allergens.length.toString()})'),
-                      )),
-                ),
-                TextButton(
-                  onPressed: () => {
-                    model
-                        .removeScannedProduct(model.getScannedProducts()[index])
-                  },
-                  child: const Icon(Icons.delete, color: secondaryColor),
-                ),
-              ]),
-          onTap: () =>
-              {model.showProductInfo(model.getScannedProducts()[index])},
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AspectRatio(
+                  aspectRatio: 1.0,
+                  child: Image.network(p.imageUrl ?? Product.missingPhotoUrl,
+                      fit: BoxFit.cover)),
+              Expanded(
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child:
+                          Text('${p.name} (${p.allergens.length.toString()})'),
+                    )),
+              ),
+              IconButton(
+                onPressed: () => {
+                  model.saveUserProduct(p.code),
+                },
+                icon: Icon(
+                    !model.productService.usersSavedProducts.contains(p.code)
+                        ? Icons.star_outline
+                        : Icons.star,
+                    color: Colors.amber),
+              ),
+              IconButton(
+                onPressed: () => {model.removeScannedProduct(p)},
+                icon: const Icon(Icons.delete, color: secondaryColor),
+              ),
+            ],
+          ),
+          onTap: () => {model.showProductInfo(p)},
         ));
   }
 }
