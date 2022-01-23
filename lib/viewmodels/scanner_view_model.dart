@@ -30,6 +30,8 @@ class ScannerViewModel extends BaseModel {
     // '8711000525723' // mising code
   ];
 
+  // static List<
+
   Product getLastScannedProduct() {
     return ScannerResults.scannedProducts.last;
   }

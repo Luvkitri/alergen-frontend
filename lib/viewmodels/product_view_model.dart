@@ -7,17 +7,19 @@ import 'package:frontend/services/product_service.dart';
 import 'package:frontend/viewmodels/base_model.dart';
 
 class ProductViewModel extends BaseModel {
-  final ProductService _productService = locator<ProductService>();
+  final ProductService productService = locator<ProductService>();
   final AllergiesService _allergiesService = locator<AllergiesService>();
-
+  bool alreadySaved = false;
   late Product product;
 
   Future<void> loadUsersProducts() async {
-    _productService.getUserProducts();
+    productService.getUserProducts();
   }
 
   Future<void> saveUserProduct(String code) async {
-    _productService.saveUserProduct(code);
+    productService.saveUserProduct(code);
+    alreadySaved = true;
+    notifyListeners();
   }
 
   List<Allergy> userAllergies = [];

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/locator.dart';
 import 'package:frontend/models/product_model.dart';
@@ -5,11 +7,11 @@ import 'package:frontend/services/auth_service.dart';
 import 'package:http/http.dart' as http;
 
 class ProductService {
-  static String baseUrl = '10.0.2.2:8001';
+  static String baseUrl = '10.0.2.2:8000';
 
   final AuthService _authService = locator<AuthService>();
 
-  List<Product> usersSavedProducts = [];
+  List<String> usersSavedProducts = [];
 
   Future<void> saveUserProduct(String code) async {
     if (_authService.user == null) {
@@ -20,31 +22,37 @@ class ProductService {
 
     Uri uri = Uri.http(
       baseUrl,
-      '/api/users/${_authService.user!.id}/products',
+      '/api/v1/users/${_authService.user!.id}/products/',
     );
-    http.Response response =
-        await http.post(uri, headers: {}, body: requestBody);
+    http.Response response = await http.post(uri,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestBody));
 
     debugPrint("saveUserProduct: $code");
     debugPrint(response.body);
+
+    getUserProducts();
   }
 
-  Future<List<Product>> getUserProducts() async {
+  Future<List<String>> getUserProducts() async {
     if (_authService.user == null) {
       return [];
     }
-    // final queryParameters = {
-    //   // 'date_from': dateStart.toIso8601String().substring(0, 10),
-    //   // 'date_to': dateEnd.toIso8601String().substring(0, 10),
-    //   // 'lat': '${location.latitude}',
-    //   // 'lon': '${location.longitude}'
-    // };
 
-    Uri uri = Uri.http(baseUrl, '/api/users/${_authService.user!.id}/products');
-    http.Response response = await http.get(uri, headers: {});
+    Uri uri =
+        Uri.http(baseUrl, '/api/v1/users/${_authService.user!.id}/products');
+    http.Response response = await http
+        .get(uri, headers: {'Content-Type': 'application/json; charset=UTF-8'});
 
     debugPrint("getUserProducts");
     debugPrint(response.body);
-    return [];
+
+    for (var productObj in jsonDecode(response.body)) {
+      usersSavedProducts.add(productObj["name"]);
+    }
+
+    return usersSavedProducts;
   }
 }
