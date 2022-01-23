@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/forecast_model.dart';
 import 'package:frontend/ui/shared/ui_helpers.dart';
+import 'package:frontend/ui/views/cross_allergies_view.dart';
 import 'package:frontend/ui/widgets/busy_indicator.dart';
 import 'package:frontend/viewmodels/forecast_view_model.dart';
 import 'package:stacked/stacked.dart';
@@ -91,11 +92,11 @@ class ForecastView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(title: const Text("Forecast View"), actions: [
           IconButton(
-            onPressed: model.getForecast,
+            onPressed: () => {model.setForecastDateOffset(0).getForecast()},
             icon: const Icon(Icons.refresh),
           ),
           IconButton(
-            onPressed: () => model.getForecast(add180days: true),
+            onPressed: () => {model.setForecastDateOffset(180).getForecast()},
             icon: const Icon(Icons.update),
           ),
         ]),
@@ -232,7 +233,7 @@ class ForecastView extends StatelessWidget {
             : Padding(
                 padding: const EdgeInsets.all(0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Expanded(
@@ -265,21 +266,23 @@ class ForecastView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Text(
-                    //     "(location: (${model.position?.latitude} ${model.position?.longitude}), region: ${model.todaysForecast?.region})"),
-                    // spacedDivider,
                     Expanded(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            DateFormat('EEEE').format(model.today),
+                            DateFormat('EEEE').format(ForecastViewModel.today),
+                            style: const TextStyle(fontSize: 32.0),
                           ),
                           Text(
-                            DateFormat('yyyy MMM dd').format(model.today),
+                            DateFormat('yyyy MMM dd')
+                                .format(ForecastViewModel.today),
+                            style: const TextStyle(fontSize: 26.0),
                           ),
                           Text(
-                              " ${model.todaysForecast!.allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s today:"),
+                            " ${model.todaysForecast!.allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s today:",
+                            style: const TextStyle(fontSize: 18.0),
+                          ),
                           Wrap(
                             //mainAxisAlignment: MainAxisAlignment.center,
                             children:
@@ -332,20 +335,24 @@ class ForecastView extends StatelessWidget {
   Widget _buildWeekForecastList(
       BuildContext context, int i, ForecastViewModel model) {
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.fromLTRB(5, 20, 5, 20),
       child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              DateFormat('EEEE').format(model.weekForecast![i].date),
-            ),
+            Text(DateFormat('EEEE').format(model.weekForecast![i].date),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             Text(
               DateFormat('yyyy MMM dd').format(model.weekForecast![i].date),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
             ),
             Text(
-                " ${model.weekForecast![i].allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s that day:"),
-            ...getAllergenChipList(model.weekForecast![i])
+                " ${model.weekForecast![i].allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s that day:",
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
+            ...getAllergenChipList(
+              model.weekForecast![i],
+            )
           ],
         ),
       ),

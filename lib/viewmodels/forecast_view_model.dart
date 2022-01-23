@@ -18,7 +18,7 @@ class ForecastViewModel extends BaseModel {
 
   List<ForecastItem>? monthForecast;
 
-  DateTime today = DateTime.now();
+  static DateTime today = DateTime.now();
 
   String? selectedRegion = 'Region 2';
 
@@ -40,10 +40,16 @@ class ForecastViewModel extends BaseModel {
     setBusy(false);
   }
 
+  ForecastViewModel setForecastDateOffset(int daysToAddToDate) {
+    today = DateTime.now().add(Duration(days: daysToAddToDate));
+    return this;
+  }
+
   Future<void> getForecast({bool add180days = false}) async {
     setBusy(true);
 
-    today = DateTime.now().add(Duration(days: add180days ? 180 : 0));
+    debugPrint("getForecast");
+    debugPrint(today.toIso8601String());
 
     await _assertPosition();
     await Future.wait({
