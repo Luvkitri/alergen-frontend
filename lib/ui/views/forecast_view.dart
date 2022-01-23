@@ -100,26 +100,26 @@ class ForecastView extends StatelessWidget {
             BottomNavigationBarItem(
               icon: const Icon(Icons.calendar_today),
               label: 'Today',
-              backgroundColor: Colors.purple.shade700,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.view_week),
               label: 'Week',
-              backgroundColor: Colors.purple.shade600,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.calendar_view_month),
               label: 'Month',
-              backgroundColor: Colors.purple.shade500,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.map),
               label: 'Map',
-              backgroundColor: Colors.purple.shade400,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
           ],
           currentIndex: model.getIndex(),
-          selectedItemColor: Colors.amberAccent.shade100,
+          selectedItemColor: Theme.of(context).colorScheme.onPrimary,
           onTap: (i) => {
             model.setIndex(i),
           },

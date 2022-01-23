@@ -55,14 +55,15 @@ class ProductView extends StatelessWidget {
                       child: const Text(
                         'Placeholder button.',
                         style: TextStyle(
-                            color: primaryColor, fontWeight: FontWeight.bold),
+                            // color: Theme.of(context).colorScheme.onBackground,
+                            fontWeight: FontWeight.bold),
                       ),
                       onPressed: () => {}),
                   TextButton(
                       child: const Text(
                         'Placeholder button2.',
                         style: TextStyle(
-                            color: secondaryColor,
+                            // color: secondaryColor,
                             fontWeight: FontWeight.normal),
                       ),
                       onPressed: () => {})
