@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/product_model.dart';
+import 'package:frontend/services/product_service.dart';
 import 'package:frontend/viewmodels/product_view_model.dart';
 import 'package:stacked/stacked.dart';
 import 'package:frontend/ui/widgets/busy_indicator.dart';
@@ -19,6 +20,8 @@ class ProductView extends StatelessWidget {
       onModelReady: (model) {
         model.product = product;
         model.getAllergiesList();
+        model.alreadySaved =
+            model.productService.usersSavedProducts.contains(product.code);
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
@@ -38,7 +41,10 @@ class ProductView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(product.name, style: titleStyleHugeB),
+                            Text(
+                              product.name,
+                              style: titleStyleHugeB,
+                            ),
                             const Text('Allergens:')
                           ])),
                   product.allergens.isNotEmpty
@@ -49,24 +55,30 @@ class ProductView extends StatelessWidget {
                               context, index, model, product),
                           itemCount: product.allergens.length,
                         ))
-                      : const Text("Haven't found any allergens"),
+                      : const Padding(
+                          padding: EdgeInsets.fromLTRB(20, 5, 15, 0),
+                          child: Text("Haven't found any allergens"),
+                        ),
                   TextButton(
-                      style: const ButtonStyle(),
-                      child: const Text(
-                        'Placeholder button.',
-                        style: TextStyle(
-                            // color: Theme.of(context).colorScheme.onBackground,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      onPressed: () => {}),
-                  TextButton(
-                      child: const Text(
-                        'Placeholder button2.',
-                        style: TextStyle(
-                            // color: secondaryColor,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      onPressed: () => {})
+                    child: Text(
+                      model.alreadySaved
+                          ? "Product already saved"
+                          : 'Save product',
+                    ),
+                    onPressed: model.alreadySaved
+                        ? null
+                        : () => {
+                              model.saveUserProduct(model.product.code),
+                            },
+                  ),
+                  // TextButton(
+                  //     child: const Text(
+                  //       'Placeholder button2.',
+                  //       style: TextStyle(
+                  //           color: secondaryColor,
+                  //           fontWeight: FontWeight.normal),
+                  //     ),
+                  //     onPressed: () => {})
                 ],
               ),
       ),

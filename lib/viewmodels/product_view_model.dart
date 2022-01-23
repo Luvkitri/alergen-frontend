@@ -3,12 +3,24 @@ import 'package:frontend/locator.dart';
 import 'package:frontend/models/allergy_model.dart';
 import 'package:frontend/models/product_model.dart';
 import 'package:frontend/services/allergies_service.dart';
+import 'package:frontend/services/product_service.dart';
 import 'package:frontend/viewmodels/base_model.dart';
 
 class ProductViewModel extends BaseModel {
+  final ProductService productService = locator<ProductService>();
   final AllergiesService _allergiesService = locator<AllergiesService>();
-
+  bool alreadySaved = false;
   late Product product;
+
+  Future<void> loadUsersProducts() async {
+    await productService.getUserProducts();
+  }
+
+  Future<void> saveUserProduct(String code) async {
+    await productService.saveUserProduct(code);
+    alreadySaved = true;
+    notifyListeners();
+  }
 
   List<Allergy> userAllergies = [];
 

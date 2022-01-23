@@ -1,7 +1,10 @@
+import 'package:collection/collection.dart';
+
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:frontend/constants/route_names.dart';
 import 'package:frontend/models/product_model.dart';
 import 'package:frontend/services/navigation_service.dart';
+import 'package:frontend/services/product_service.dart';
 import 'package:frontend/viewmodels/base_model.dart';
 import 'package:frontend/models/scanner_model.dart';
 import 'package:frontend/services/openfoodfacts_service.dart';
@@ -10,21 +13,33 @@ import 'dart:math';
 
 class ScannerViewModel extends BaseModel {
   final NavigationService _navigationService = locator<NavigationService>();
+
+  final ProductService productService = locator<ProductService>();
+
   final OpenfoodfactsService _openfoodfactsService =
       locator<OpenfoodfactsService>();
+
+  Future<void> saveUserProduct(String code) async {
+    if (!productService.usersSavedProducts.contains(code)) {
+      await productService.saveUserProduct(code);
+      notifyListeners();
+    }
+  }
 
   // example codes for quick tests
   static List<String> sampleCodes = [
     '3017620422003', // nutella
     '8008714002176', // bbq chips
-    '5900311003705', // ??
+    // '5900311003705', // ??
     '20026752', // piri piri
     '8715700420585', // heinz ketchup
     '5907069000017', // sugar
     '8711000525722', // jacobs coffee
-    'aaaaaaa3342342', // wrong code
-    '8711000525723' // mising code
+    // 'aaaaaaa3342342', // wrong code
+    // '8711000525723' // mising code
   ];
+
+  // static List<
 
   Product getLastScannedProduct() {
     return ScannerResults.scannedProducts.last;
@@ -34,7 +49,26 @@ class ScannerViewModel extends BaseModel {
     return ScannerResults.scannedProducts;
   }
 
-  void removeScannedProduct(Product p) {
+  Future<void> fetchProductData() async {
+    setBusy(true);
+    var userProducts = await productService.getUserProducts();
+    for (var code in userProducts) {
+      Product p = await _openfoodfactsService.findProduct(code);
+      if ((ScannerResults.scannedProducts
+              .firstWhereOrNull((element) => element.code == code)) ==
+          null) {
+        ScannerResults.scannedProducts.insert(0, p);
+      }
+    }
+    setBusy(false);
+    notifyListeners();
+  }
+
+  void removeScannedProduct(Product p) async {
+    if (productService.usersSavedProducts.contains(p.code)) {
+      await productService.deleteUserProduct(p.code);
+    }
+
     ScannerResults.scannedProducts.remove(p);
     sampleCodes.add(p.code);
     notifyListeners();
