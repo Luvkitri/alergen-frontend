@@ -17,7 +17,7 @@ class StartUpView extends StatelessWidget {
       },
       builder: (context, model, child) => Scaffold(
         body: Container(
-          color: secondaryColor,
+          color: Theme.of(context).colorScheme.secondary,
           child: model.busy
               ? const BusyIndicator()
               : Center(
@@ -27,7 +27,9 @@ class StartUpView extends StatelessWidget {
                       verticalSpaceSmall,
                       Image.asset("assets/images/logo_main_screen.png"),
                       ElevatedButton(
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(primaryColor)),
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).colorScheme.primary)),
                         onPressed: model.newUser,
                         child: const Padding(
                           padding: EdgeInsets.all(8.0),

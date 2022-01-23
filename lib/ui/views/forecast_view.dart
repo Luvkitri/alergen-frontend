@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/forecast_model.dart';
 import 'package:frontend/ui/shared/ui_helpers.dart';
+import 'package:frontend/ui/views/cross_allergies_view.dart';
 import 'package:frontend/ui/widgets/busy_indicator.dart';
 import 'package:frontend/viewmodels/forecast_view_model.dart';
 import 'package:stacked/stacked.dart';
@@ -9,15 +10,21 @@ import 'package:intl/intl.dart';
 class ForecastView extends StatelessWidget {
   const ForecastView({Key? key}) : super(key: key);
 
-  List<Widget> getAllergenChipList(ForecastItem fi) {
+  List<Widget> getAllergenChipList(ForecastItem fi, {bool compact = false}) {
+    VisualDensity density = compact
+        ? const VisualDensity(
+            horizontal: VisualDensity.minimumDensity,
+            vertical: VisualDensity.minimumDensity)
+        : VisualDensity.standard;
+
     return fi.allergenTypeStrength.entries
         .where((element) => element.value > 0)
-        .map(
-          (e) => Chip(
-            backgroundColor: getAllergenChipColor(e.value),
-            label: Text(e.key),
-          ),
-        )
+        .map((e) => Chip(
+              backgroundColor: getAllergenChipColor(e.value),
+              label: Text(e.key),
+              // padding: EdgeInsets.all(padding),
+              visualDensity: density,
+            ))
         .toList();
   }
 
@@ -89,9 +96,16 @@ class ForecastView extends StatelessWidget {
         viewmodel.getForecast(),
       },
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          title: const Text("Forecast View"),
-        ),
+        appBar: AppBar(title: const Text("Forecast View"), actions: [
+          IconButton(
+            onPressed: () => {model.setForecastDateOffset(0).getForecast()},
+            icon: const Icon(Icons.refresh),
+          ),
+          IconButton(
+            onPressed: () => {model.setForecastDateOffset(180).getForecast()},
+            icon: const Icon(Icons.update),
+          ),
+        ]),
         body: model.busy
             ? const BusyIndicator()
             : _getWidget(model.getIndex(), context),
@@ -100,26 +114,26 @@ class ForecastView extends StatelessWidget {
             BottomNavigationBarItem(
               icon: const Icon(Icons.calendar_today),
               label: 'Today',
-              backgroundColor: Colors.purple.shade700,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.view_week),
               label: 'Week',
-              backgroundColor: Colors.purple.shade600,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.calendar_view_month),
               label: 'Month',
-              backgroundColor: Colors.purple.shade500,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.map),
               label: 'Map',
-              backgroundColor: Colors.purple.shade400,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
           ],
           currentIndex: model.getIndex(),
-          selectedItemColor: Colors.amberAccent.shade100,
+          selectedItemColor: Theme.of(context).colorScheme.onPrimary,
           onTap: (i) => {
             model.setIndex(i),
           },
@@ -194,7 +208,7 @@ class ForecastView extends StatelessWidget {
         body: model.busy
             ? const BusyIndicator()
             : Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(5),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -206,19 +220,6 @@ class ForecastView extends StatelessWidget {
                       itemCount: model.monthForecast?.length,
                       scrollDirection: Axis.vertical,
                     )),
-                    smallSpacedDivider,
-                    TextButton(
-                      onPressed: () => {
-                        model.getForecast(),
-                      },
-                      child: const Text("refresh forecast"),
-                    ),
-                    TextButton(
-                      onPressed: () => {
-                        model.getForecast(add180days: true),
-                      },
-                      child: const Text("refresh forecast (+180days)"),
-                    )
                   ],
                 ),
               ),
@@ -238,7 +239,7 @@ class ForecastView extends StatelessWidget {
             : Padding(
                 padding: const EdgeInsets.all(0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Expanded(
@@ -249,19 +250,6 @@ class ForecastView extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                       ),
                     ),
-                    smallSpacedDivider,
-                    TextButton(
-                      onPressed: () => {
-                        model.getForecast(),
-                      },
-                      child: const Text("refresh forecast"),
-                    ),
-                    TextButton(
-                      onPressed: () => {
-                        model.getForecast(add180days: true),
-                      },
-                      child: const Text("refresh forecast (+180days)"),
-                    )
                   ],
                 ),
               ),
@@ -284,21 +272,23 @@ class ForecastView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                        "(location: (${model.position?.latitude} ${model.position?.longitude}), region: ${model.todaysForecast?.region})"),
-                    spacedDivider,
                     Expanded(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            DateFormat('EEEE').format(model.today),
+                            DateFormat('EEEE').format(ForecastViewModel.today),
+                            style: const TextStyle(fontSize: 32.0),
                           ),
                           Text(
-                            DateFormat('yyyy MMM dd').format(model.today),
+                            DateFormat('yyyy MMM dd')
+                                .format(ForecastViewModel.today),
+                            style: const TextStyle(fontSize: 26.0),
                           ),
                           Text(
-                              " ${model.todaysForecast!.allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s today:"),
+                            " ${model.todaysForecast!.allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s today:",
+                            style: const TextStyle(fontSize: 18.0),
+                          ),
                           Wrap(
                             //mainAxisAlignment: MainAxisAlignment.center,
                             children:
@@ -314,19 +304,6 @@ class ForecastView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    smallSpacedDivider,
-                    TextButton(
-                      onPressed: () => {
-                        model.getForecast(),
-                      },
-                      child: const Text("refresh forecast"),
-                    ),
-                    TextButton(
-                      onPressed: () => {
-                        model.getForecast(add180days: true),
-                      },
-                      child: const Text("refresh forecast (+180days)"),
-                    )
                   ],
                 ),
               ),
@@ -340,23 +317,31 @@ class ForecastView extends StatelessWidget {
         .toList()
         .reduce((a, b) => a + b);
 
-    List<String> allergensStrong = model
+    // List<String> allergensStrong = model
+    //     .monthForecast![index].allergenTypeStrength.entries
+    //     .where((e) => e.value == 2)
+    //     .map((e) => e.key)
+    //     .toList();
+    // List<String> allergensMedium = model
+    //     .monthForecast![index].allergenTypeStrength.entries
+    //     .where((e) => e.value == 1)
+    //     .map((e) => e.key)
+    //     .toList();
+
+    List<String> allergensAll = model
         .monthForecast![index].allergenTypeStrength.entries
-        .where((e) => e.value == 2)
-        .map((e) => e.key)
-        .toList();
-    List<String> allergensMedium = model
-        .monthForecast![index].allergenTypeStrength.entries
-        .where((e) => e.value == 1)
         .map((e) => e.key)
         .toList();
 
     return Card(
       child: ListTile(
         leading: getAllergenIcon(dangerThatDay, 56.0),
-        title: Text(
-            "${DateFormat('MMM dd').format(model.monthForecast![index].date)}, $allergensStrong"),
-        subtitle: Text("$allergensMedium"),
+        title:
+            Text(DateFormat('MMM dd').format(model.monthForecast![index].date)),
+        subtitle: Wrap(
+          children:
+              getAllergenChipList(model.monthForecast![index], compact: true),
+        ),
       ),
     );
   }
@@ -364,20 +349,24 @@ class ForecastView extends StatelessWidget {
   Widget _buildWeekForecastList(
       BuildContext context, int i, ForecastViewModel model) {
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.fromLTRB(5, 20, 5, 20),
       child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              DateFormat('EEEE').format(model.weekForecast![i].date),
-            ),
+            Text(DateFormat('EEEE').format(model.weekForecast![i].date),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             Text(
               DateFormat('yyyy MMM dd').format(model.weekForecast![i].date),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
             ),
             Text(
-                " ${model.weekForecast![i].allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s that day:"),
-            ...getAllergenChipList(model.weekForecast![i])
+                " ${model.weekForecast![i].allergenTypeStrength.entries.where((element) => element.value > 0).length} allergen/s that day:",
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal)),
+            ...getAllergenChipList(
+              model.weekForecast![i],
+            )
           ],
         ),
       ),
