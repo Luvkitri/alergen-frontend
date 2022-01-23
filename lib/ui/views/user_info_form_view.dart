@@ -36,12 +36,9 @@ class UserInfoFormView extends StatelessWidget {
               smallSpacedDivider,
               userInfoFormField('Email', model.emailController),
               smallSpacedDivider,
-              userInfoFormField('Phone number', model.phoneNumberController),
-              smallSpacedDivider,
               userInfoSexSelector(model),
               smallSpacedDivider,
               userBirthdayField(context, model),
-              smallSpacedDivider,
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: ElevatedButton(
@@ -62,6 +59,7 @@ class UserInfoFormView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const Text('Birthday', style: TextStyle(fontSize: 18)),
+          verticalSpaceSmall,
           ElevatedButton(
               onPressed: () {
                 model.showBirthdayPicker(context);
@@ -81,6 +79,7 @@ class UserInfoFormView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: const TextStyle(fontSize: 18)),
+          verticalSpaceSmall,
           InputField(
             controller: controller,
             placeholder: title,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:frontend/ui/shared/ui_helpers.dart';
 import 'package:frontend/ui/widgets/busy_indicator.dart';
 import 'package:frontend/viewmodels/start_up_view_model.dart';
@@ -15,25 +16,29 @@ class StartUpView extends StatelessWidget {
         model.handleStartUpLogic();
       },
       builder: (context, model, child) => Scaffold(
-        body: model.busy
-            ? const BusyIndicator()
-            : Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    verticalSpaceSmall,
-                    const Text('Allergen', style: TextStyle(fontSize: 50)),
-                    ElevatedButton(
-                      onPressed: model.newUser,
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child:
-                            Text("Let's go!", style: TextStyle(fontSize: 30)),
+        body: Container(
+          color: secondaryColor,
+          child: model.busy
+              ? const BusyIndicator()
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      verticalSpaceSmall,
+                      Image.asset("assets/images/logo_main_screen.png"),
+                      ElevatedButton(
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(primaryColor)),
+                        onPressed: model.newUser,
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child:
+                              Text("Let's go!", style: TextStyle(fontSize: 30)),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+        ),
       ),
     );
   }

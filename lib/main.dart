@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: locator<NavigationService>().navigationKey,
       theme: ThemeData(
         primaryColor: primaryColor,
+        primarySwatch: Colors.purple,
         backgroundColor: backgroundColor,
         textTheme: Theme.of(context).textTheme.apply(
               fontFamily: 'Open Sans',
