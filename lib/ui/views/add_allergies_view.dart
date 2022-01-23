@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/allergy_model.dart';
 import 'package:frontend/ui/shared/ui_helpers.dart';
+import 'package:frontend/ui/widgets/input_field.dart';
 import 'package:frontend/viewmodels/add_allergies_view_model.dart';
 import 'package:stacked/stacked.dart';
 
@@ -19,21 +20,47 @@ class AddAllergiesView extends StatelessWidget {
           title: const Text("Add Your Allergies"),
           actions: [
             IconButton(
-                onPressed: model.saveUsersAllergies,
-                icon: const Icon(Icons.done)),
+              onPressed: model.saveUsersAllergies,
+              icon: const Icon(Icons.done),
+            ),
           ],
         ),
-        body: model.allergies.isEmpty
-            ? const Center(child: Text('Error'))
-            : Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView.separated(
-                    separatorBuilder: (ctx, index) {
-                      return smallSpacedDivider;
-                    },
-                    itemCount: model.allergies.length,
-                    itemBuilder: (ctx, index) =>
-                        _allergyItemBuilder(index, model)),
+        body: Column(
+                children: [
+                  verticalSpaceSmall,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: InputField(
+                            controller: model.filterController,
+                            placeholder: 'Search',
+                            onChanged: model.filterAllergies,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: model.clearSearch,
+                          icon: const Icon(Icons.clear),
+                        )
+                      ],
+                    ),
+                  ),
+                  smallSpacedDivider,
+                  Expanded(
+                    child: model.allergies.isEmpty ? const Text('No allergies were found') : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.separated(
+                        separatorBuilder: (ctx, index) {
+                          return smallSpacedDivider;
+                        },
+                        itemCount: model.allergies.length,
+                        itemBuilder: (ctx, index) =>
+                            _allergyItemBuilder(index, model),
+                      ),
+                    ),
+                  ),
+                ],
               ),
       ),
     );
@@ -47,8 +74,8 @@ class AddAllergiesView extends StatelessWidget {
         children: [
           Text(a.name),
           Checkbox(
-            value: model.allergiesSelected[index],
-            onChanged: (i) => model.addAllergyToList(index, i),
+            value: model.allergiesSelected[a.id],
+            onChanged: (i) => model.addAllergyToList(a.id, i),
           ),
         ],
       ),
