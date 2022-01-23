@@ -89,9 +89,16 @@ class ForecastView extends StatelessWidget {
         viewmodel.getForecast(),
       },
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          title: const Text("Forecast View"),
-        ),
+        appBar: AppBar(title: const Text("Forecast View"), actions: [
+          IconButton(
+            onPressed: model.getForecast,
+            icon: const Icon(Icons.refresh),
+          ),
+          IconButton(
+            onPressed: () => model.getForecast(add180days: true),
+            icon: const Icon(Icons.update),
+          ),
+        ]),
         body: model.busy
             ? const BusyIndicator()
             : _getWidget(model.getIndex(), context),
@@ -206,19 +213,6 @@ class ForecastView extends StatelessWidget {
                       itemCount: model.monthForecast?.length,
                       scrollDirection: Axis.vertical,
                     )),
-                    smallSpacedDivider,
-                    TextButton(
-                      onPressed: () => {
-                        model.getForecast(),
-                      },
-                      child: const Text("refresh forecast"),
-                    ),
-                    TextButton(
-                      onPressed: () => {
-                        model.getForecast(add180days: true),
-                      },
-                      child: const Text("refresh forecast (+180days)"),
-                    )
                   ],
                 ),
               ),
@@ -249,19 +243,6 @@ class ForecastView extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                       ),
                     ),
-                    smallSpacedDivider,
-                    TextButton(
-                      onPressed: () => {
-                        model.getForecast(),
-                      },
-                      child: const Text("refresh forecast"),
-                    ),
-                    TextButton(
-                      onPressed: () => {
-                        model.getForecast(add180days: true),
-                      },
-                      child: const Text("refresh forecast (+180days)"),
-                    )
                   ],
                 ),
               ),
@@ -284,9 +265,9 @@ class ForecastView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                        "(location: (${model.position?.latitude} ${model.position?.longitude}), region: ${model.todaysForecast?.region})"),
-                    spacedDivider,
+                    // Text(
+                    //     "(location: (${model.position?.latitude} ${model.position?.longitude}), region: ${model.todaysForecast?.region})"),
+                    // spacedDivider,
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -314,19 +295,6 @@ class ForecastView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    smallSpacedDivider,
-                    TextButton(
-                      onPressed: () => {
-                        model.getForecast(),
-                      },
-                      child: const Text("refresh forecast"),
-                    ),
-                    TextButton(
-                      onPressed: () => {
-                        model.getForecast(add180days: true),
-                      },
-                      child: const Text("refresh forecast (+180days)"),
-                    )
                   ],
                 ),
               ),
