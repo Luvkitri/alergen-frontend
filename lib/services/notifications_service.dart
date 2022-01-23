@@ -43,8 +43,9 @@ class NotificationService {
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
+      icon: "ic_notif_ico",
     );
-     await _geoService.getCurrentPosition();
+    await _geoService.getCurrentPosition();
     ForecastItem? forecastItem = await _forecastService.getForecastForDate(
       DateTime.now(),
       _geoService.getLastPosition(),
