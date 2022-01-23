@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Fish Stats',
-      color: primaryColor,
+      color: Theme.of(context).colorScheme.primary,
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(context).copyWith(
             textScaleFactor: 1.0), //tu pomyśleć czy może zostać ale pewnie nie
@@ -33,9 +33,24 @@ class MyApp extends StatelessWidget {
       ),
       navigatorKey: locator<NavigationService>().navigationKey,
       theme: ThemeData(
-        primaryColor: primaryColor,
-        primarySwatch: Colors.purple,
-        backgroundColor: backgroundColor,
+        // primaryColor: primaryColor,
+        // primarySwatch: Colors.purple,
+        colorScheme: const ColorScheme(
+          primary: Colors.purple,
+          primaryVariant: Colors.deepPurple,
+          secondary: Colors.tealAccent,
+          secondaryVariant: Colors.green,
+          background: Colors.white,
+          surface: Colors.white,
+          error: Colors.redAccent,
+          onPrimary: Colors.white,
+          onSecondary: Colors.black,
+          onSurface: Colors.black,
+          onBackground: Colors.black,
+          onError: Colors.white,
+          brightness: Brightness.light,
+        ),
+        // backgroundColor: backgroundColor,
         textTheme: Theme.of(context).textTheme.apply(
               fontFamily: 'Open Sans',
               decoration: TextDecoration.none,

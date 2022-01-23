@@ -67,7 +67,7 @@ class ScannerView extends StatelessWidget {
                     model
                         .removeScannedProduct(model.getScannedProducts()[index])
                   },
-                  child: const Icon(Icons.delete, color: secondaryColor),
+                  child: const Icon(Icons.delete),
                 ),
               ]),
           onTap: () =>
