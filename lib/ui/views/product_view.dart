@@ -53,19 +53,19 @@ class ProductView extends StatelessWidget {
                   TextButton(
                       style: const ButtonStyle(),
                       child: const Text(
-                        'Placeholder button.',
+                        'Save product',
                         style: TextStyle(
                             color: primaryColor, fontWeight: FontWeight.bold),
                       ),
                       onPressed: () => {}),
-                  TextButton(
-                      child: const Text(
-                        'Placeholder button2.',
-                        style: TextStyle(
-                            color: secondaryColor,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      onPressed: () => {})
+                  // TextButton(
+                  //     child: const Text(
+                  //       'Placeholder button2.',
+                  //       style: TextStyle(
+                  //           color: secondaryColor,
+                  //           fontWeight: FontWeight.normal),
+                  //     ),
+                  //     onPressed: () => {})
                 ],
               ),
       ),

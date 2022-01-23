@@ -12,7 +12,7 @@ class ScannerView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ScannerViewModel>.reactive(
       viewModelBuilder: () => ScannerViewModel(),
-      onModelReady: (model) => {},
+      onModelReady: (model) => {model.productService.getUserProducts()},
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: const Text("Product scanner"),
